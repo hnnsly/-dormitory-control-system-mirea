@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"hackaton/pkg/database"
+	"hackaton/pkg/loggers"
 	"hackaton/pkg/models"
 	"net/http"
 	"strconv"
@@ -16,12 +17,11 @@ const SecretKey = "secret"
 
 func Register(c *gin.Context) {
 	var data map[string]string
-
 	if err := c.BindJSON(&data); err != nil {
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
-	//
+
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
 	user := models.User{
@@ -33,6 +33,7 @@ func Register(c *gin.Context) {
 	err := createUser(&user)
 
 	if err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not register user"})
 		return
 	}
@@ -42,8 +43,11 @@ func Register(c *gin.Context) {
 
 func createUser(user *models.User) error {
 	password := user.Password
-	err := database.DB.QueryRow("INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id",
-		user.Name, user.Email, password).Scan(&user.Id)
+	_, err := database.DB.Exec("INSERT INTO users (username, password) VALUES ($1, $2)",
+		user.Email, password)
+	if err != nil {
+		return err
+	}
 
 	return err
 }

@@ -30,28 +30,32 @@
     <input type="radio" id="register" name="action" value="register">
     <label for="register">Register</label>
 
-    <button type="button" onclick="submitForm()">Submit</button>
+    <button type="submit">Submit</button>
 </form>
+<script src="/static/js/jsjss.js"></script>
+{{/*<script>*/}}
+{{/*    function submitForm() {*/}}
+{{/*        const form = document.getElementById('authForm');*/}}
+{{/*        console.log(form)*/}}
+{{/*        const formData = new FormData(form);*/}}
+{{/*        const action = formData.get('action');*/}}
+{{/*        const url = action === 'login' ? '/api/login' : '/api/register';*/}}
 
-<script>
-    function submitForm() {
-        const form = document.getElementById('authForm');
-        const formData = new FormData(form);
-        const action = formData.get('action');
-        const url = action === 'login' ? '/api/login' : '/api/register';
 
-        fetch(url, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                // Дополнительные действия после отправки данных, если необходимо
-                //
-            })
-            .catch(error => console.error('Error:', error));
-    }
-</script>
+{{/*        fetch(url, {*/}}
+{{/*            method: 'POST',*/}}
+{{/*            headers: {*/}}
+{{/*                "Content-Type": "multipart/form-data",*/}}
+{{/*            },*/}}
+{{/*            body: formData*/}}
+{{/*        })*/}}
+{{/*            .then(response => response.json())*/}}
+{{/*            .then(data => {*/}}
+{{/*                console.log(data);*/}}
+{{/*                // Дополнительные действия после отправки данных, если необходимо*/}}
+{{/*            })*/}}
+{{/*            .catch(error => console.error('Error:', error));*/}}
+{{/*    }*/}}
+{{/*</script>*/}}
 </body>
 </html>

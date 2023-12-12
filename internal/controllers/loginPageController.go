@@ -10,5 +10,3 @@ func Start(c *gin.Context) {
 		"title": "Login",
 	})
 }
-
-//
