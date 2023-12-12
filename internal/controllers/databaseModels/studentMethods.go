@@ -61,6 +61,9 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 			studentSMOL = make([]Student, 0, 4)
 		}
 	}
+	if count%4 != 0 {
+		students = append(students, studentSMOL)
+	}
 
 	if err != nil {
 		if err == sql.ErrNoRows {

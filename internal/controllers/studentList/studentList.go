@@ -6,6 +6,7 @@ import (
 	"hackaton/internal/helping"
 	"hackaton/pkg/loggers"
 	"net/http"
+	"strconv"
 )
 
 func FindPage(c *gin.Context) {
@@ -48,8 +49,11 @@ func ListStudents(c *gin.Context) {
 	//	c.JSON(400, gin.H{"message": "invalid request"})
 	//	return
 	//}
-
-	templateData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("birth_place", "magadan", 0)
+	page, _ := strconv.Atoi(c.Query("page"))
+	if c.Query("page") == "" {
+		page = 1
+	}
+	templateData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("birth_place", "magadan", (page - 1*20))
 	if err != nil {
 		loggers.ErrorLogger.Println(err)
 		c.Status(http.StatusInternalServerError)
