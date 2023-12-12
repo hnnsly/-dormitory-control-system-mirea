@@ -13,17 +13,16 @@ type StudentModel struct {
 
 var StudentsDB StudentModel
 
-func InitStudents() {
+func InitStudentsDB() {
 	StudentsDB.DB = database.DB
 }
 
 // Ping получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
 func (m *StudentModel) Ping(column, value any) ([]Student, error) {
-	// Строка запроса
+
 	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1", column)
 
-	// Выполняем запрос
 	rows, err := m.DB.Query(query, value)
 	if err != nil {
 		loggers.ErrorLogger.Println(err)
@@ -31,10 +30,8 @@ func (m *StudentModel) Ping(column, value any) ([]Student, error) {
 	}
 	defer rows.Close()
 
-	// Срез для хранения результатов
 	var students []Student
 
-	// Обработка результатов запроса
 	for rows.Next() {
 		var user Student
 		err := rows.Scan(
@@ -52,7 +49,7 @@ func (m *StudentModel) Ping(column, value any) ([]Student, error) {
 			loggers.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
-		// Добавляем пользователя в срез
+
 		students = append(students, user)
 	}
 
@@ -72,6 +69,33 @@ func (m *StudentModel) Ping(column, value any) ([]Student, error) {
 	return students, nil
 }
 
-// TODO: если честно я это не тестил, но в теории и по бингу все работает
-// да и возможности потестить у меня особо не было, полноценная хтмл страница работает через очко, поскольку бинг,
-// а через постмен че то проблематично
+func (m *StudentModel) Add(student *Student) error {
+
+	query := `
+		INSERT INTO students (
+			card_number,
+			full_name,
+			birth_date,
+			photo_url,
+			housing_order_number,
+			enrollment_order_number,
+			enrollment_date,
+			birth_place,
+			residence_address
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+
+	_, err := StudentsDB.DB.Exec(
+		query,
+		student.CardNumber,
+		student.FullName,
+		student.BirthDate,
+		student.PhotoUrl,
+		student.HousingOrderNumber,
+		student.EnrollmentOrderNumber,
+		student.EnrollmentDate,
+		student.BirthPlace,
+		student.ResidenceAddress,
+	)
+
+	return err
+}
