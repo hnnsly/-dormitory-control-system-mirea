@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"hackaton/database"
+	"hackaton/pkg/database"
 	"hackaton/routes"
 )
 

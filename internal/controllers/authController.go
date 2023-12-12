@@ -5,8 +5,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"hackaton/database"
-	"hackaton/models"
+	"hackaton/pkg/database"
+	"hackaton/pkg/models"
 	"net/http"
 	"strconv"
 	"time"
@@ -57,9 +57,8 @@ func Login(c *gin.Context) {
 	}
 
 	var user models.User
-
-	err := database.DB.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", data["email"]).
-		Scan(&user.Id, &user.Name, &user.Email, &user.Password)
+	err := database.DB.QueryRow("SELECT id, role, name, email, password FROM users WHERE email = $1", data["email"]).
+		Scan(&user.Id, &user.Role, &user.Name, &user.Email, &user.Password)
 
 	if err == sql.ErrNoRows {
 		c.JSON(404, gin.H{"message": "user not found"})
