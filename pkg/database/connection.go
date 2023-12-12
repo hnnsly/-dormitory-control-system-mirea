@@ -45,7 +45,7 @@ func createTables() {
 			card_number INT,
     		full_name VARCHAR(255),
     		birth_date DATE,
-    		photo_url VARCHAR(255),
+    		photo_url TEXT,
     		housing_order_number INT,
     		enrollment_order_number INT,
     		enrollment_date DATE,

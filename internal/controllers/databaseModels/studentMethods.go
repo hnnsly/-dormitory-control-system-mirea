@@ -19,7 +19,7 @@ func InitStudentsDB() {
 
 // ShowStudentsByCriteria получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
-func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) ([]Student, error) {
+func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
 
 	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT $3", column)
 
@@ -30,8 +30,9 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 	}
 	defer rows.Close()
 
-	var students []Student
-
+	students := make([][]Student, 0, 4)
+	var count int
+	var block int
 	for rows.Next() {
 		var user Student
 		err := rows.Scan(
@@ -50,8 +51,14 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 			loggers.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
-
-		students = append(students, user)
+		if count%4 == 0 {
+			students[block] = make([]Student, 0)
+		}
+		students[block] = append(students[block], user)
+		count++
+		if count%4 == 0 {
+			block++
+		}
 	}
 
 	if err != nil {
@@ -59,12 +66,6 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 			return nil, fmt.Errorf("Студент не найден")
 		}
 		return nil, fmt.Errorf("Ошибка выполнения запроса")
-	}
-
-	fullNames := make([]string, len(students))
-
-	for i := 0; i < len(students); i++ {
-		fullNames[i] = students[i].FullName
 	}
 
 	return students, nil
