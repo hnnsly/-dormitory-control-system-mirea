@@ -2,11 +2,14 @@ package loginPage
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"hackaton/pkg/loggers"
+	"hackaton/pkg/templates"
 )
 
 func Start(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "Login",
-	})
+	err := templates.TemplateCache["index.page.tmpl.html"].Execute(c.Writer, nil)
+	if err != nil {
+		loggers.ErrorLogger.Println(err)
+		return
+	}
 }

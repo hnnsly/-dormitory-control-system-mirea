@@ -22,15 +22,15 @@ func NewTemplateCache(dir string) (map[string]*template.Template, error) {
 			loggers.ErrorLogger.Println(err)
 			return nil, err
 		}
-		ts, err = ts.ParseGlob(filepath.Join(dir, "*.layout.tmpl.html"))
-		if err != nil {
-			return nil, err
-		}
-
-		ts, err = ts.ParseGlob(filepath.Join(dir, "*.partial.tmpl.html"))
-		if err != nil {
-			return nil, err
-		}
+		//ts, err = ts.ParseGlob(filepath.Join(dir, "*.layout.tmpl.html"))
+		//if err != nil {
+		//	return nil, err
+		//}
+		//
+		//ts, err = ts.ParseGlob(filepath.Join(dir, "*.partial.tmpl.html"))
+		//if err != nil {
+		//	return nil, err
+		//}
 		cache[name] = ts
 	}
 	return cache, nil

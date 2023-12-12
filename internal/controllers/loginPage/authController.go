@@ -5,6 +5,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"hackaton/internal/helping"
+	"hackaton/internal/keys"
 	"hackaton/pkg/database"
 	"hackaton/pkg/loggers"
 	"hackaton/pkg/models"
@@ -12,8 +14,6 @@ import (
 	"strconv"
 	"time"
 )
-
-const SecretKey = "secret"
 
 func Register(c *gin.Context) {
 	var data map[string]string
@@ -82,7 +82,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := generateToken(strconv.Itoa(int(user.Id)))
+	token, err := helping.GenerateToken(strconv.Itoa(int(user.Id)))
 
 	if err != nil {
 		c.JSON(500, gin.H{"message": "could not login"})
@@ -100,21 +100,7 @@ func Login(c *gin.Context) {
 
 	http.SetCookie(c.Writer, cookie)
 	//c.Writer.Header().Add("access-control-expose-headers", "Set-Cookie")
-
-	c.JSON(200, gin.H{"message": "success"})
-}
-
-func generateToken(issuer string) (string, error) {
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer:    issuer,
-		ExpiresAt: time.Now().Add(time.Hour * 730).Unix(), //1 day
-	})
-
-	token, err := claims.SignedString([]byte(SecretKey))
-	if err != nil {
-		return "", err
-	}
-	return token, nil
+	c.Redirect(302, "/students/find")
 }
 
 func User(c *gin.Context) {
@@ -126,7 +112,7 @@ func User(c *gin.Context) {
 	}
 
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(keys.SecretKey), nil
 	})
 
 	if err != nil {
