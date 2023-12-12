@@ -35,6 +35,7 @@ func (m *StudentModel) Ping(column, value any) ([]Student, error) {
 	for rows.Next() {
 		var user Student
 		err := rows.Scan(
+			&user.ID,
 			&user.CardNumber,
 			&user.FullName,
 			&user.BirthDate,
@@ -72,7 +73,7 @@ func (m *StudentModel) Ping(column, value any) ([]Student, error) {
 func (m *StudentModel) Add(student *Student) error {
 
 	query := `
-		INSERT INTO students (
+		INSERT INTO students (   
 			card_number,
 			full_name,
 			birth_date,
@@ -87,6 +88,38 @@ func (m *StudentModel) Add(student *Student) error {
 	_, err := StudentsDB.DB.Exec(
 		query,
 		student.CardNumber,
+		student.FullName,
+		student.BirthDate,
+		student.PhotoUrl,
+		student.HousingOrderNumber,
+		student.EnrollmentOrderNumber,
+		student.EnrollmentDate,
+		student.BirthPlace,
+		student.ResidenceAddress,
+	)
+
+	return err
+}
+
+func (m *StudentModel) Rewrite(student Student) error {
+	query := `
+		UPDATE students
+		SET
+			full_name = $2,
+			birth_date = $3,
+			photo_url = $4,
+			housing_order_number = $5,
+			enrollment_order_number = $6,
+			enrollment_date = $7,
+			birth_place = $8,
+			residence_address = $9
+		WHERE
+			id = $1
+	`
+
+	_, err := StudentsDB.DB.Exec(
+		query,
+		student.ID,
 		student.FullName,
 		student.BirthDate,
 		student.PhotoUrl,

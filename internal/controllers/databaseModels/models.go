@@ -3,6 +3,7 @@ package databaseModels
 import "time"
 
 type Student struct {
+	ID                    int       `json:"id"`
 	CardNumber            int       `json:"card_number"`
 	FullName              string    `json:"full_name"`
 	BirthDate             time.Time `json:"birth_date"`

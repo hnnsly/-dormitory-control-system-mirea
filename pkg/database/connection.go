@@ -41,7 +41,8 @@ func createTables() {
 
 	_, err = DB.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
-			card_number INT PRIMARY KEY,
+		    id SERIAL PRIMARY KEY,
+			card_number INT,
     		full_name VARCHAR(255),
     		birth_date DATE,
     		photo_url VARCHAR(255),
