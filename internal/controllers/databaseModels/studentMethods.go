@@ -31,6 +31,7 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 	defer rows.Close()
 
 	students := make([][]Student, 0, 4)
+	studentSMOL := make([]Student, 0, 4)
 	var count int
 	var block int
 	for rows.Next() {
@@ -51,13 +52,13 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 			loggers.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
-		if count%4 == 0 {
-			students[block] = make([]Student, 0)
-		}
-		students[block] = append(students[block], user)
+		studentSMOL = append(studentSMOL, user)
 		count++
 		if count%4 == 0 {
+			students = append(students, studentSMOL)
 			block++
+			count = 0
+			studentSMOL = make([]Student, 0, 4)
 		}
 	}
 
