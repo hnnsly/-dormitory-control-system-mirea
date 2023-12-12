@@ -14,12 +14,6 @@ import (
 
 const SecretKey = "secret"
 
-func Start(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "Login",
-	})
-}
-
 func Register(c *gin.Context) {
 	var data map[string]string
 
