@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	_ "hackaton/models"
+	_ "hackaton/pkg/models"
 )
 
 var DB *sql.DB

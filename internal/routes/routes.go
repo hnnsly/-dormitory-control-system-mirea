@@ -6,6 +6,8 @@ import (
 )
 
 func Setup(app *gin.Engine) {
+	app.LoadHTMLGlob("web/html/*")
+	app.Static("/static", "./web/static")
 	app.GET("/login", controllers.Start)
 	app.POST("/api/register", controllers.Register)
 	app.POST("/api/login", controllers.Login)

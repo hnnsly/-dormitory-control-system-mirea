@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"hackaton/internal/routes"
 	"hackaton/pkg/database"
-	"hackaton/routes"
 )
 
 func main() {
