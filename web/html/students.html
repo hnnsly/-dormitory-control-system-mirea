@@ -32,22 +32,29 @@
 </head>
 <body>
 <div id="container">
-    <ul id="list">
+    {{range .Students}}
+    <ul id="list" onclick=someJsFunc()>
+            <p>{{.CardNumber}}</p>
+            <p>{{.FullName}}</p>
+            <p>{{.BirthDate}}</p>
+            <image src={{.PhotoUrl}}>{</image>
+            <p>{{.HousingOrderNumber}}</p>
+            <p>{{.CardNumber}}</p>
 
     </ul>
+    {{end}}
 </div>
 
-<script>
+{{/*<script>*/}}
+{{/*    const names = [];*/}}
 
-    const names = [];
+{{/*    const listElement = document.getElementById('list');*/}}
 
-    const listElement = document.getElementById('list');
-
-    names.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        listElement.appendChild(li);
-    });
-</script>
+{{/*    names.forEach(item => {*/}}
+{{/*        const li = document.createElement('li');*/}}
+{{/*        li.textContent = item;*/}}
+{{/*        listElement.appendChild(li);*/}}
+{{/*    });*/}}
+{{/*</script>*/}}
 </body>
 </html>

@@ -1,4 +1,4 @@
-package controllers
+package loginPage
 
 import (
 	"database/sql"
@@ -92,7 +92,7 @@ func Login(c *gin.Context) {
 	cookie := &http.Cookie{
 		Name:     "jwt",
 		Value:    token,
-		Expires:  time.Now().Add(time.Hour * 24),
+		Expires:  time.Now().Add(time.Hour * 730),
 		HttpOnly: true,
 		Secure:   false,
 		Path:     "/",
@@ -107,7 +107,7 @@ func Login(c *gin.Context) {
 func generateToken(issuer string) (string, error) {
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Issuer:    issuer,
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
+		ExpiresAt: time.Now().Add(time.Hour * 730).Unix(), //1 day
 	})
 
 	token, err := claims.SignedString([]byte(SecretKey))

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"hackaton/pkg/database"
+	"hackaton/pkg/loggers"
 )
 
 type StudentModel struct {
@@ -12,19 +13,20 @@ type StudentModel struct {
 
 var StudentsDB StudentModel
 
-func init() {
+func InitStudents() {
 	StudentsDB.DB = database.DB
 }
 
 // Ping получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
-func (m StudentModel) Ping(column, value any) ([]string, error) {
+func (m *StudentModel) Ping(column, value any) ([]Student, error) {
 	// Строка запроса
-	query := fmt.Sprintf("SELECT * FROM students WHERE %s = ?", column)
+	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1", column)
 
 	// Выполняем запрос
-	rows, err := StudentsDB.DB.Query(query, value)
+	rows, err := m.DB.Query(query, value)
 	if err != nil {
+		loggers.ErrorLogger.Println(err)
 		return nil, fmt.Errorf("Ошибка выполнения запроса")
 	}
 	defer rows.Close()
@@ -47,6 +49,7 @@ func (m StudentModel) Ping(column, value any) ([]string, error) {
 			&user.ResidenceAddress,
 		)
 		if err != nil {
+			loggers.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
 		// Добавляем пользователя в срез
@@ -66,7 +69,7 @@ func (m StudentModel) Ping(column, value any) ([]string, error) {
 		fullNames[i] = students[i].FullName
 	}
 
-	return fullNames, nil
+	return students, nil
 }
 
 // TODO: если честно я это не тестил, но в теории и по бингу все работает
