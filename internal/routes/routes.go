@@ -9,6 +9,7 @@ func Setup(app *gin.Engine) {
 	app.LoadHTMLGlob("web/html/*")
 	app.Static("/static", "./web/static")
 	app.GET("/login", controllers.Start)
+	app.GET("/map", controllers.Start)
 	app.GET("/find", controllers.Start)
 	app.GET("/user", controllers.User)
 	app.POST("/api/register", controllers.Register)
