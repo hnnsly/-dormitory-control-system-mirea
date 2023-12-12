@@ -16,8 +16,5 @@ func init() {
 }
 
 func (m StudentModel) Ping() {
-	err := m.DB.QueryRow("SELECT id, username, password FROM users WHERE username = $1", data["email"]).
-		Scan(&user.Id, &user.Email, &user.Password)
 
-	m.DB.QueryRow("SELECT * FROM users").Scan()
 }
