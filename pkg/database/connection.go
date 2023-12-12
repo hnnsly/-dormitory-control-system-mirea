@@ -41,10 +41,15 @@ func createTables() {
 
 	_, err = DB.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
-			id SERIAL PRIMARY KEY,
-			username VARCHAR(255) NOT NULL,
-			fio VARCHAR(255) NOT NULL,
-			date_of_birth VARCHAR(10) NOT NULL
+			card_number INT PRIMARY KEY,
+    		full_name VARCHAR(255),
+    		birth_date DATE,
+    		photo_url VARCHAR(255),
+    		housing_order_number INT,
+    		enrollment_order_number INT,
+    		enrollment_date DATE,
+    		birth_place VARCHAR(255),
+    		residence_address VARCHAR(255)
 		);
 	`)
 	if err != nil {
