@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -119,7 +118,6 @@ func generateToken(issuer string) (string, error) {
 }
 
 func User(c *gin.Context) {
-	fmt.Println(c.Request.Header)
 	cookie, err := c.Request.Cookie("jwt")
 	if err != nil {
 		loggers.ErrorLogger.Println(err)
@@ -159,8 +157,8 @@ func Logout(c *gin.Context) {
 		Value:    "",
 		Expires:  time.Now().Add(-time.Hour),
 		HttpOnly: true,
+		Path:     "/",
 	}
-
 	http.SetCookie(c.Writer, cookie)
 
 	c.JSON(200, gin.H{"message": "success"})

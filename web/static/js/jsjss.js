@@ -3,9 +3,7 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
 
     // Создаем новый объект FormData
     var formData = new FormData(this);
-    const action = formData.get('action');
     const username = formData.get('username');
-    const url = action === 'login' ? '/api/login' : '/api/register';
     const password = formData.get('password');
 
     // Создаем объект для отправки данных в формате JSON
@@ -14,7 +12,7 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
         password: password,
     };
 
-    fetch(url, {
+    fetch("/api/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
