@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -17,6 +18,7 @@ const SecretKey = "secret"
 
 func Register(c *gin.Context) {
 	var data map[string]string
+
 	if err := c.BindJSON(&data); err != nil {
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
@@ -25,7 +27,6 @@ func Register(c *gin.Context) {
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
 	user := models.User{
-		Name:     data["name"],
 		Email:    data["email"],
 		Password: []byte(string(password)),
 	}
@@ -42,9 +43,8 @@ func Register(c *gin.Context) {
 }
 
 func createUser(user *models.User) error {
-	password := user.Password
 	_, err := database.DB.Exec("INSERT INTO users (username, password) VALUES ($1, $2)",
-		user.Email, password)
+		user.Email, user.Password)
 	if err != nil {
 		return err
 	}
@@ -56,18 +56,21 @@ func Login(c *gin.Context) {
 	var data map[string]string
 
 	if err := c.BindJSON(&data); err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 
 	var user models.User
-	err := database.DB.QueryRow("SELECT id, role, name, email, password FROM users WHERE email = $1", data["email"]).
-		Scan(&user.Id, &user.Role, &user.Name, &user.Email, &user.Password)
+	err := database.DB.QueryRow("SELECT id, username, password FROM users WHERE username = $1", data["email"]).
+		Scan(&user.Id, &user.Email, &user.Password)
 
 	if err == sql.ErrNoRows {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(404, gin.H{"message": "user not found"})
 		return
 	} else if err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not retrieve user"})
 		return
 	}
@@ -75,6 +78,7 @@ func Login(c *gin.Context) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data["password"]))
 
 	if err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "incorrect password"})
 		return
 	}
@@ -91,9 +95,12 @@ func Login(c *gin.Context) {
 		Value:    token,
 		Expires:  time.Now().Add(time.Hour * 24),
 		HttpOnly: true,
+		Secure:   false,
+		Path:     "/",
 	}
 
 	http.SetCookie(c.Writer, cookie)
+	//c.Writer.Header().Add("access-control-expose-headers", "Set-Cookie")
 
 	c.JSON(200, gin.H{"message": "success"})
 }
@@ -112,8 +119,10 @@ func generateToken(issuer string) (string, error) {
 }
 
 func User(c *gin.Context) {
+	fmt.Println(c.Request.Header)
 	cookie, err := c.Request.Cookie("jwt")
 	if err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(401, gin.H{"message": "unauthenticated"})
 		return
 	}
@@ -123,6 +132,7 @@ func User(c *gin.Context) {
 	})
 
 	if err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(401, gin.H{"message": "unauthenticated"})
 		return
 	}
@@ -131,10 +141,11 @@ func User(c *gin.Context) {
 
 	var user models.User
 
-	err = database.DB.QueryRow("SELECT id, name, email FROM users WHERE id = $1", claims.Issuer).
+	err = database.DB.QueryRow("SELECT id, username, password FROM users WHERE id = $1", claims.Issuer).
 		Scan(&user.Id, &user.Name, &user.Email)
 
 	if err != nil {
+		loggers.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not retrieve user"})
 		return
 	}
