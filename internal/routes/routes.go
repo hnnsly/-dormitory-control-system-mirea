@@ -15,3 +15,5 @@ func Setup(app *gin.Engine) {
 	app.POST("/api/logout", controllers.Logout)
 	//app.GET("/login", controllers.Logout)
 }
+
+//

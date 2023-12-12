@@ -21,7 +21,7 @@ func Register(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
-
+	//
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
 	user := models.User{
