@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #container {
+            width: 300px;
+            height: 400px;
+            margin: 50px auto;
+            border: 2px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <ul id="list">
+
+    </ul>
+</div>
+
+<script>
+
+    const names = [];
+
+    const listElement = document.getElementById('list');
+
+    names.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        listElement.appendChild(li);
+    });
+</script>
+</body>
+</html>
