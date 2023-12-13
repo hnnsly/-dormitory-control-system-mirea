@@ -25,7 +25,7 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
             if (response.redirected) {
         window.location.href = response.url
             }
-        }) //TODO: ГАНДОНИЩЕ
+        })
         .then(data => {
             console.log(data);
             // Дополнительные действия после отправки данных, если необходимо
