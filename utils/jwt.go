@@ -1,11 +1,11 @@
-package api
+package utils
 
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/types"
-	"hackaton/utils"
 	"net/http"
 	"strconv"
 	"time"
@@ -17,7 +17,7 @@ func CheckJWTAuth(c *gin.Context) (*types.User, error) {
 		return nil, err
 	}
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(utils.SecretKey), nil
+		return []byte(SecretKey), nil
 	})
 
 	if err != nil {
@@ -30,12 +30,12 @@ func CheckJWTAuth(c *gin.Context) (*types.User, error) {
 		Scan(&user.Id, &user.Name, &user.Email)
 
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		return nil, err
 	}
 	newToken, err := GenerateToken(strconv.Itoa(int(user.Id)))
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func GenerateToken(issuer string) (string, error) {
 		ExpiresAt: time.Now().Add(time.Hour * 730).Unix(), //1 day
 	})
 
-	token, err := claims.SignedString([]byte(utils.SecretKey))
+	token, err := claims.SignedString([]byte(SecretKey))
 	if err != nil {
 		return "", err
 	}

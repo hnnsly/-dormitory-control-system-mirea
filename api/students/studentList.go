@@ -3,7 +3,7 @@ package students
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"hackaton/api"
+	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/utils"
 	"net/http"
@@ -12,9 +12,9 @@ import (
 )
 
 func FindPage(c *gin.Context) {
-	_, err := api.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -27,9 +27,9 @@ func FindPage(c *gin.Context) {
 }
 func ListStudents(c *gin.Context) {
 	fmt.Println(c.Request.URL, "akgjkad")
-	_, err := api.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -37,11 +37,11 @@ func ListStudents(c *gin.Context) {
 	encodedQuery := c.Request.URL.RawQuery
 	decodedQuery, err := url.QueryUnescape(encodedQuery)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 	}
 	queryParams, err := url.ParseQuery(decodedQuery)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 	}
 	filters := make(map[string]string)
 	for key, values := range queryParams {
@@ -65,7 +65,7 @@ func ListStudents(c *gin.Context) {
 	if filters["name"] != "" {
 		tempData, err := storage.Store.ShowStudentsByCriteria("full_name", filters["name"], (page-1)*12)
 		if err != nil {
-			utils.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
@@ -73,7 +73,7 @@ func ListStudents(c *gin.Context) {
 	} else if filters["number"] != "" {
 		tempData, err := storage.Store.ShowStudentsByCriteria("card_number", filters["number"], (page-1)*12)
 		if err != nil {
-			utils.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
@@ -82,7 +82,7 @@ func ListStudents(c *gin.Context) {
 	if filters["housing"] != "0" {
 		tempData, err := storage.Store.ShowStudentsByCriteria("residence_address", filters["housing"], (page-1)*12)
 		if err != nil {
-			utils.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}

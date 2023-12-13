@@ -3,6 +3,7 @@ package students
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/utils"
 	"net/http"
@@ -13,25 +14,25 @@ import (
 func ShowStudentCard(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 	}
 	stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Status(http.StatusInternalServerError)
 	}
 	err = utils.TemplateCache["student.page.tmpl.html"].Execute(c.Writer, stud[0])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		return
 	}
 }
 func EditStudentPage(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -43,7 +44,7 @@ func EditStudentPage(c *gin.Context) {
 func AddStudentPage(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -56,7 +57,7 @@ func AddStudentPage(c *gin.Context) {
 func EditStudentAPI(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 	}
@@ -65,43 +66,43 @@ func EditStudentAPI(c *gin.Context) {
 
 	if err := c.BindJSON(&filter); err != nil {
 		fmt.Println("gerre")
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	bDate, err := time.Parse("02.01.2006", filter["birth_date"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	eDate, err := time.Parse("02.01.2006", filter["enrollment_date"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	i, err := strconv.Atoi(filter["card_number"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	h, err := strconv.Atoi(filter["housing_order_number"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	e, err := strconv.Atoi(filter["enrollment_order_number"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
@@ -118,7 +119,7 @@ func EditStudentAPI(c *gin.Context) {
 		ResidenceAddress:      filter["residence_address"]}
 	err = storage.Store.Rewrite(*student)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Status(500)
 		return
 	}
@@ -128,7 +129,7 @@ func EditStudentAPI(c *gin.Context) {
 func AddStudentAPI(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 	}
@@ -137,37 +138,37 @@ func AddStudentAPI(c *gin.Context) {
 
 	if err := c.BindJSON(&filter); err != nil {
 		fmt.Println("gerre")
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	bDate, err := time.Parse("02.01.2006", filter["birth_date"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	eDate, err := time.Parse("02.01.2006", filter["enrollment_date"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	i, err := strconv.Atoi(filter["card_number"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	h, err := strconv.Atoi(filter["housing_order_number"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	e, err := strconv.Atoi(filter["enrollment_order_number"])
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
@@ -183,7 +184,7 @@ func AddStudentAPI(c *gin.Context) {
 		ResidenceAddress:      filter["residence_address"]}
 	err = storage.Store.Add(student)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Status(500)
 		return
 	}

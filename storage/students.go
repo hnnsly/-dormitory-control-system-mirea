@@ -3,7 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
-	"hackaton/utils"
+	"hackaton/log"
 	"time"
 )
 
@@ -15,7 +15,7 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 
 	rows, err := st.Db.Query(query, value, offset)
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		return nil, fmt.Errorf("Ошибка выполнения запроса")
 	}
 	defer rows.Close()
@@ -39,7 +39,7 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 			&user.ResidenceAddress,
 		)
 		if err != nil {
-			utils.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
 		studentSMOL = append(studentSMOL, user)

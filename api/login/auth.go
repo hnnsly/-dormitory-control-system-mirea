@@ -5,6 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/types"
 	"hackaton/utils"
@@ -31,7 +32,7 @@ func Register(c *gin.Context) {
 	err := storage.Store.AddUser(&user)
 
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not register user"})
 		return
 	}
@@ -53,7 +54,7 @@ func Login(c *gin.Context) {
 	var data map[string]string
 
 	if err := c.BindJSON(&data); err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
@@ -63,11 +64,11 @@ func Login(c *gin.Context) {
 		Scan(&user.Id, &user.Email, &user.Password)
 
 	if err == sql.ErrNoRows {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(404, gin.H{"message": "user not found"})
 		return
 	} else if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not retrieve user"})
 		return
 	}
@@ -75,7 +76,7 @@ func Login(c *gin.Context) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data["password"]))
 
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "incorrect password"})
 		return
 	}
@@ -104,7 +105,7 @@ func Login(c *gin.Context) {
 func User(c *gin.Context) {
 	cookie, err := c.Request.Cookie("jwt")
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(401, gin.H{"message": "unauthenticated"})
 		return
 	}
@@ -114,7 +115,7 @@ func User(c *gin.Context) {
 	})
 
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(401, gin.H{"message": "unauthenticated"})
 		return
 	}
@@ -126,7 +127,7 @@ func User(c *gin.Context) {
 	err = storage.Store.SearchUser(&user, claims)
 
 	if err != nil {
-		utils.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not retrieve user"})
 		return
 	}
