@@ -1,5 +1,6 @@
 package main
 
+//
 import "math/rand"
 
 type Account struct {
