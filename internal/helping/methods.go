@@ -17,7 +17,6 @@ func CheckJWTAuth(c *gin.Context) (*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(keys.SecretKey), nil
 	})

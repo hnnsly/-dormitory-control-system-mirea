@@ -14,6 +14,7 @@
     <h1 class="text-center">Информация о студентах</h1>
     <hr>
 </div>
+<div class="text-end" style="margin-bottom: -38px;"><button class="btn btn-success text-end" type="submit" style="margin-left: 15px;margin-right: 104px;" onclick="window.location.href='/students/add'">Добавить студента</button></div>
 <div class="container d-xxl-flex justify-content-xxl-center">
     <form class="d-xxl-flex justify-content-xxl-center" style="max-width: 1000px;" id="findForm" action="http://localhost:8000/students/find">
         <input class="form-control" type="search" name="name" style="max-width: 300px;margin-right: 10px;" placeholder="Имя">
@@ -33,7 +34,7 @@
 <div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 30px;margin-bottom: 10px;">
     {{range $elementIndex, $element := $row }}
     <div class="card text-start" style="max-width: 350px;padding-right: 0px;margin-left: 15px;margin-right: 15px;"><img class="rounded card-img-top w-100 d-block" src="assets/img/1651815347_3-celes-club-p-kvadrat-v-prirode-krasivo-foto-3.jpg" style="max-height: 270px;margin: 0px;padding: 2px;">
-        <div class="card-body" onclick="window.location.href='/student/show?id={{$element.ID}}'">
+        <div class="card-body" onclick="window.location.href='/students/show?id={{$element.ID}}'">
             <h4 class="card-title" style="margin-bottom: 15px;">{{$element.FullName}}</h4>
             <h6 class="text-muted card-subtitle mb-2" style="padding-bottom: 0px;margin-bottom: 0px;">Номер</h6>
             <p class="card-text" style="margin-bottom: 10px;">3Т-2301&nbsp;</p>

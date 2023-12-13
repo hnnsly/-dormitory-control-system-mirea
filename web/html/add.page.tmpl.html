@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>registrStudent</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Profile-Edit-Form-styles.css">
+    <link rel="stylesheet" href="assets/css/Profile-Edit-Form.css">
+</head>
+
+<body>
+<div class="container">
+    <div class="d-md-flex justify-content-md-end" style="margin-top: 7px;"><button class="btn btn-warning" type="button" onclick="window.location.href='/students/find'">Вернуться к общему списку</button></div>
+    <hr class="my-2" style="margin-top: 18px;">
+</div>
+<div class="container profile profile-view" id="profile">
+    <div class="row">
+        <div class="col-md-12 alert-col relative">
+            <div class="alert alert-info alert-dismissible absolue center" role="alert"><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="alert"></button><span>Profile save with success</span></div>
+        </div>
+    </div>
+    <form id="createForm">
+        <div class="row profile-row">
+            <div class="col-md-4 relative">
+                <div class="avatar">
+                    <div class="avatar-bg center"></div>
+                </div><input class="form-control form-control" type="file" name="avatar-file">
+            </div>
+            <div class="col-md-8">
+                <h1>Добавление студента</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Фамилия</label><input class="form-control" type="text" name="firstname" placeholder="Иванов"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Имя</label><input class="form-control" type="text" name="lastname" placeholder="Иван"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Отчество</label><input class="form-control" type="text" name="lastname2" placeholder="Иванович"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Место рождения</label><input class="form-control" type="text" name="birth_place" placeholder="г.Москва"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Дата рождения</label><input class="form-control" type="text" name="date_of_birth" placeholder="01.08.2003"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Номер карты</label><input class="form-control" type="text" name="number" placeholder="333"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Дата зачисления</label><input class="form-control" type="text" name="enrol_date" placeholder="01.08.2023"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Приказ о предоставлении общежития</label><input class="form-control" type="text" name="housing_number" placeholder=" Номер приказа"></div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group mb-3"><label class="form-label">Приказ о зачислении студента</label><input class="form-control" type="text" name="enrol_number" placeholder=" Номер приказа"></div>
+                    </div>
+                </div>
+                <div class="form-group mb-3"><label class="form-label">Кампус общежития</label><select class="form-select" name="housing">
+                        <optgroup label="Номер общежития">
+                            <option value="1" selected="">№1</option>
+                            <option value="2">№2</option>
+                            <option value="3">№3</option>
+                        </optgroup>
+                    </select></div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12 content-right"><button class="btn btn-primary form-btn" type="submit">Добавить</button><button class="btn btn-danger form-btn" type="reset">Отмена</button></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/Profile-Edit-Form-profile.js"></script>
+<script src="/static/js/createPage.js"></script>
+</body>
+
+</html>

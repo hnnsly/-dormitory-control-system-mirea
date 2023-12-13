@@ -21,6 +21,9 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
         body: JSON.stringify(data)
     })
         .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url
+            }
             if (response.ok) {
                 document.body.append("ВСЕ ПРОШЛО")
             }

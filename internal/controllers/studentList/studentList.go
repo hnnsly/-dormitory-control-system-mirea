@@ -80,7 +80,7 @@ func ListStudents(c *gin.Context) {
 		templateData = append(templateData, tempData...)
 	}
 	if filters["housing"] != "0" {
-		tempData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("residence_address", filters["name"], (page-1)*12)
+		tempData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("residence_address", filters["housing"], (page-1)*12)
 		if err != nil {
 			loggers.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
