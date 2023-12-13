@@ -1,4 +1,4 @@
-package loggers
+package utils
 
 import (
 	"log"
@@ -13,4 +13,5 @@ func init() {
 		panic(err)
 	}
 	ErrorLogger = log.New(file, "", log.LstdFlags)
+
 }

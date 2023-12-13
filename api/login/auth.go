@@ -1,15 +1,13 @@
-package loginPage
+package login
 
 import (
 	"database/sql"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"hackaton/internal/helping"
-	"hackaton/internal/keys"
-	"hackaton/pkg/database"
-	"hackaton/pkg/loggers"
-	"hackaton/pkg/models"
+	"hackaton/storage"
+	"hackaton/types"
+	"hackaton/utils"
 	"net/http"
 	"strconv"
 	"time"
@@ -25,15 +23,15 @@ func Register(c *gin.Context) {
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
-	user := models.User{
+	user := types.User{
 		Email:    data["email"],
 		Password: []byte(string(password)),
 	}
 
-	err := createUser(&user)
+	err := storage.Store.AddUser(&user)
 
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not register user"})
 		return
 	}
@@ -41,8 +39,8 @@ func Register(c *gin.Context) {
 	c.JSON(200, user)
 }
 
-func createUser(user *models.User) error {
-	_, err := database.DB.Exec("INSERT INTO users (username, password) VALUES ($1, $2)",
+func createUser(user *types.User) error {
+	_, err := storage.Store.Db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)",
 		user.Email, user.Password)
 	if err != nil {
 		return err
@@ -55,21 +53,21 @@ func Login(c *gin.Context) {
 	var data map[string]string
 
 	if err := c.BindJSON(&data); err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 
-	var user models.User
-	err := database.DB.QueryRow("SELECT id, username, password FROM users WHERE username = $1", data["email"]).
+	var user types.User
+	err := storage.Store.Db.QueryRow("SELECT id, username, password FROM users WHERE username = $1", data["email"]).
 		Scan(&user.Id, &user.Email, &user.Password)
 
 	if err == sql.ErrNoRows {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(404, gin.H{"message": "user not found"})
 		return
 	} else if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not retrieve user"})
 		return
 	}
@@ -77,12 +75,12 @@ func Login(c *gin.Context) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data["password"]))
 
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "incorrect password"})
 		return
 	}
 
-	token, err := helping.GenerateToken(strconv.Itoa(int(user.Id)))
+	token, err := utils.GenerateToken(strconv.Itoa(int(user.Id)))
 
 	if err != nil {
 		c.JSON(500, gin.H{"message": "could not login"})
@@ -106,30 +104,29 @@ func Login(c *gin.Context) {
 func User(c *gin.Context) {
 	cookie, err := c.Request.Cookie("jwt")
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(401, gin.H{"message": "unauthenticated"})
 		return
 	}
 
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(keys.SecretKey), nil
+		return []byte(utils.SecretKey), nil
 	})
 
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(401, gin.H{"message": "unauthenticated"})
 		return
 	}
 
 	claims := token.Claims.(*jwt.StandardClaims)
 
-	var user models.User
+	var user types.User
 
-	err = database.DB.QueryRow("SELECT id, username, password FROM users WHERE id = $1", claims.Issuer).
-		Scan(&user.Id, &user.Name, &user.Email)
+	err = storage.Store.SearchUser(&user, claims)
 
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(500, gin.H{"message": "could not retrieve user"})
 		return
 	}

@@ -1,7 +1,6 @@
-package templates
+package utils
 
 import (
-	"hackaton/pkg/loggers"
 	"html/template"
 	"path/filepath"
 )
@@ -12,14 +11,14 @@ func NewTemplateCache(dir string) (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 	pages, err := filepath.Glob(filepath.Join(dir, "*.page.tmpl.html"))
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		ErrorLogger.Println(err)
 		return nil, err
 	}
 	for _, page := range pages {
 		name := filepath.Base(page)
 		ts, err := template.ParseFiles(page)
 		if err != nil {
-			loggers.ErrorLogger.Println(err)
+			ErrorLogger.Println(err)
 			return nil, err
 		}
 		//ts, err = ts.ParseGlob(filepath.Join(dir, "*.layout.tmpl.html"))

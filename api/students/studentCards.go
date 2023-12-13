@@ -1,39 +1,37 @@
-package studentCards
+package students
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"hackaton/internal/controllers/databaseModels"
-	"hackaton/internal/helping"
-	"hackaton/pkg/loggers"
-	"hackaton/pkg/templates"
+	"hackaton/storage"
+	"hackaton/utils"
 	"net/http"
 	"strconv"
 	"time"
 )
 
 func ShowStudentCard(c *gin.Context) {
-	_, err := helping.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 	}
-	stud, err := databaseModels.StudentsDB.ShowStudentsByCriteria("id", c.Query("id"), 0)
+	stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Status(http.StatusInternalServerError)
 	}
-	err = templates.TemplateCache["student.page.tmpl.html"].Execute(c.Writer, stud[0])
+	err = utils.TemplateCache["student.page.tmpl.html"].Execute(c.Writer, stud[0])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		return
 	}
 }
 func EditStudentPage(c *gin.Context) {
-	_, err := helping.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -43,9 +41,9 @@ func EditStudentPage(c *gin.Context) {
 	})
 }
 func AddStudentPage(c *gin.Context) {
-	_, err := helping.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -56,9 +54,9 @@ func AddStudentPage(c *gin.Context) {
 }
 
 func EditStudentAPI(c *gin.Context) {
-	_, err := helping.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 	}
@@ -67,47 +65,47 @@ func EditStudentAPI(c *gin.Context) {
 
 	if err := c.BindJSON(&filter); err != nil {
 		fmt.Println("gerre")
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	bDate, err := time.Parse("02.01.2006", filter["birth_date"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	eDate, err := time.Parse("02.01.2006", filter["enrollment_date"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	i, err := strconv.Atoi(filter["card_number"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	h, err := strconv.Atoi(filter["housing_order_number"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	e, err := strconv.Atoi(filter["enrollment_order_number"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
-	student := &databaseModels.Student{
+	student := &storage.Student{
 		ID:                    id,
 		CardNumber:            i,
 		FullName:              filter["full_name"],
@@ -118,9 +116,9 @@ func EditStudentAPI(c *gin.Context) {
 		EnrollmentOrderNumber: e,
 		BirthPlace:            filter["birth_place"],
 		ResidenceAddress:      filter["residence_address"]}
-	err = databaseModels.StudentsDB.Rewrite(*student)
+	err = storage.Store.Rewrite(*student)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Status(500)
 		return
 	}
@@ -128,9 +126,9 @@ func EditStudentAPI(c *gin.Context) {
 
 }
 func AddStudentAPI(c *gin.Context) {
-	_, err := helping.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 	}
@@ -139,41 +137,41 @@ func AddStudentAPI(c *gin.Context) {
 
 	if err := c.BindJSON(&filter); err != nil {
 		fmt.Println("gerre")
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	bDate, err := time.Parse("02.01.2006", filter["birth_date"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	eDate, err := time.Parse("02.01.2006", filter["enrollment_date"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	i, err := strconv.Atoi(filter["card_number"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	h, err := strconv.Atoi(filter["housing_order_number"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
 	e, err := strconv.Atoi(filter["enrollment_order_number"])
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
-	student := &databaseModels.Student{
+	student := &storage.Student{
 		CardNumber:            i,
 		FullName:              filter["full_name"],
 		BirthDate:             bDate,
@@ -183,9 +181,9 @@ func AddStudentAPI(c *gin.Context) {
 		EnrollmentOrderNumber: e,
 		BirthPlace:            filter["birth_place"],
 		ResidenceAddress:      filter["residence_address"]}
-	err = databaseModels.StudentsDB.Add(student)
+	err = storage.Store.Add(student)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		c.Status(500)
 		return
 	}

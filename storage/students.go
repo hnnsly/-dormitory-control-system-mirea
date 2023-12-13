@@ -1,31 +1,21 @@
-package databaseModels
+package storage
 
 import (
 	"database/sql"
 	"fmt"
-	"hackaton/pkg/database"
-	"hackaton/pkg/loggers"
+	"hackaton/utils"
+	"time"
 )
-
-type StudentModel struct {
-	DB *sql.DB
-}
-
-var StudentsDB StudentModel
-
-func InitStudentsDB() {
-	StudentsDB.DB = database.DB
-}
 
 // ShowStudentsByCriteria получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
-func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
+func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
 	fmt.Println(offset)
 	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
 
-	rows, err := m.DB.Query(query, value, offset)
+	rows, err := st.Db.Query(query, value, offset)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		utils.ErrorLogger.Println(err)
 		return nil, fmt.Errorf("Ошибка выполнения запроса")
 	}
 	defer rows.Close()
@@ -49,7 +39,7 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 			&user.ResidenceAddress,
 		)
 		if err != nil {
-			loggers.ErrorLogger.Println(err)
+			utils.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
 		studentSMOL = append(studentSMOL, user)
@@ -75,7 +65,11 @@ func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) 
 	return students, nil
 }
 
-func (m *StudentModel) Add(student *Student) error {
+func (st *PStorage) Search(student *Student) error {
+	return nil
+}
+
+func (st *PStorage) Add(student *Student) error {
 	query := `
 		INSERT INTO students (   
 			card_number,
@@ -89,7 +83,7 @@ func (m *StudentModel) Add(student *Student) error {
 			residence_address
 		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
-	_, err := StudentsDB.DB.Exec(
+	_, err := st.Db.Exec(
 		query,
 		student.CardNumber,
 		student.FullName,
@@ -105,7 +99,7 @@ func (m *StudentModel) Add(student *Student) error {
 	return err
 }
 
-func (m *StudentModel) Rewrite(student Student) error {
+func (st *PStorage) Rewrite(student Student) error {
 	query := `
 		UPDATE students
 		SET
@@ -121,7 +115,7 @@ func (m *StudentModel) Rewrite(student Student) error {
 			id = $1
 	`
 
-	_, err := StudentsDB.DB.Exec(
+	_, err := st.Db.Exec(
 		query,
 		student.ID,
 		student.FullName,
@@ -135,4 +129,17 @@ func (m *StudentModel) Rewrite(student Student) error {
 	)
 
 	return err
+}
+
+type Student struct {
+	ID                    int       `json:"id"`
+	CardNumber            int       `json:"card_number"`
+	FullName              string    `json:"full_name"`
+	BirthDate             time.Time `json:"birth_date"`
+	PhotoUrl              string    `json:"photo_url"`
+	HousingOrderNumber    int       `json:"housing_order_number"`
+	EnrollmentOrderNumber int       `json:"enrollment_order_number"`
+	EnrollmentDate        time.Time `json:"enrollment_date"`
+	BirthPlace            string    `json:"birth_place"`
+	ResidenceAddress      string    `json:"residence_address"`
 }
