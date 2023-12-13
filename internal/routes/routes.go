@@ -12,8 +12,7 @@ func Setup(app *gin.Engine) {
 	app.Static("/static", "./web/static")
 
 	app.GET("/login", loginPage.Start)
-	app.GET("/students/find", studentList.FindPage)
-	app.POST("/students/find", studentList.ListStudents)
+	app.GET("/students/find", studentList.ListStudents)
 	app.GET("/students/show", studentCards.ShowStudentCard)
 	app.GET("/students/add", studentCards.AddStudentPage)
 	app.GET("/students/edit", studentCards.EditStudentPage) //TODO: из-за такого при первом заходе на поиск будет нихуя, а после поиска обновление страницы

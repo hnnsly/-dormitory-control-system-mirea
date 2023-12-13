@@ -20,10 +20,10 @@ func InitStudentsDB() {
 // ShowStudentsByCriteria получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
 func (m *StudentModel) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
+	fmt.Println(offset)
+	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
 
-	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT $3", column)
-
-	rows, err := m.DB.Query(query, value, offset, offset+20)
+	rows, err := m.DB.Query(query, value, offset)
 	if err != nil {
 		loggers.ErrorLogger.Println(err)
 		return nil, fmt.Errorf("Ошибка выполнения запроса")

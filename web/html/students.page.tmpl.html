@@ -15,7 +15,7 @@
     <hr>
 </div>
 <div class="container d-xxl-flex justify-content-xxl-center">
-    <form class="d-xxl-flex justify-content-xxl-center" style="max-width: 1000px;" id="findForm">
+    <form class="d-xxl-flex justify-content-xxl-center" style="max-width: 1000px;" id="findForm" action="http://localhost:8000/students/find">
         <input class="form-control" type="search" name="name" style="max-width: 300px;margin-right: 10px;" placeholder="Имя">
         <input class="form-control" type="search" name="number" style="max-width: 150px;margin-right: 10px;" placeholder="Номер">
         <select class="form-select" name="housing">
@@ -28,11 +28,12 @@
         </select><button class="btn btn-primary" type="submit" style="margin-left: 15px;">Button</button></form>
 </div>
 {{$rows := .Students}}
+{{if $rows}}
 {{range $index, $row := $rows}}
 <div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 30px;margin-bottom: 10px;">
     {{range $elementIndex, $element := $row }}
     <div class="card text-start" style="max-width: 350px;padding-right: 0px;margin-left: 15px;margin-right: 15px;"><img class="rounded card-img-top w-100 d-block" src="assets/img/1651815347_3-celes-club-p-kvadrat-v-prirode-krasivo-foto-3.jpg" style="max-height: 270px;margin: 0px;padding: 2px;">
-        <div class="card-body" onclick="window.location.href='/student/show{{$element.ID}}'">
+        <div class="card-body" onclick="window.location.href='/student/show?id={{$element.ID}}'">
             <h4 class="card-title" style="margin-bottom: 15px;">{{$element.FullName}}</h4>
             <h6 class="text-muted card-subtitle mb-2" style="padding-bottom: 0px;margin-bottom: 0px;">Номер</h6>
             <p class="card-text" style="margin-bottom: 10px;">3Т-2301&nbsp;</p>
@@ -43,15 +44,22 @@
     {{end}}
 </div>
 {{end}}
+<div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 80px;margin-bottom: 10px;">
+</div>
+{{else}}
+<div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 30px;margin-bottom: 10px;">
+    Никто не найден!
+</div>
+{{end}}
 <nav class="d-xxl-flex justify-content-xxl-center" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%)">
     <ul class="pagination">
-        <li class="page-item"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">4</a></li>
-        <li class="page-item"><a class="page-link" href="#">5</a></li>
-        <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+        <li class="page-item"><a class="page-link" aria-label="Previous" href="?page%3D{{.PagePrev}}%26{{.Query}}"><span aria-hidden="true">«</span></a></li>
+        <li class="page-item"><a class="page-link" href="?page%3D{{.Page1}}%26{{.Query}}">{{.Page1}}</a></li>
+        <li class="page-item"><a class="page-link" href="?page%3D{{.Page2}}%26{{.Query}}">{{.Page2}}</a></li>
+        <li class="page-item"><a class="page-link" href="?page%3D{{.Page3}}%26{{.Query}}">{{.Page3}}</a></li>
+        <li class="page-item"><a class="page-link" href="?page%3D{{.Page4}}%26{{.Query}}">{{.Page4}}</a></li>
+        <li class="page-item"><a class="page-link" href="?page%3D{{.Page5}}%26{{.Query}}">{{.Page5}}</a></li>
+        <li class="page-item"><a class="page-link" aria-label="Next" href="?page%3D{{.PageNext}}%26{{.Query}}"><span aria-hidden="true">»</span></a></li>
     </ul>
 </nav>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
