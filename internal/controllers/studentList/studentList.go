@@ -107,6 +107,8 @@ func ListStudents(c *gin.Context) {
 	c.HTML(200, "students.page.tmpl.html", gin.H{
 		"title":    "Login",
 		"Students": templateData,
+		"Name":     filters["name"],
+		"Number":   filters["number"],
 		"Page1":    page - 2,
 		"Page2":    page - 1,
 		"Page3":    page,

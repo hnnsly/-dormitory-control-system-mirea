@@ -14,7 +14,6 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
     const enrol_number = formData.get('enrol_number');
     const housing = formData.get('housing');
     //TODO:profile pic
-    //TODO: сделать ввод dd.mm.yyyy, который прогонит в yyyy-mm-dd
 
     // Создаем объект для отправки данных в формате JSON
     var data = {
@@ -41,16 +40,13 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
                 window.location.href = response.url
             }
             if (response.ok) {
-                document.body.append("ВСЕ СОЗДАНО")
+                document.getElementById("statusTab").textContent = "Студент добавлен"
             }
             if (response.status == 400){
-                document.body.append("ВЫ НЕПРАВИЛЬНО ВВЕЛИ ДАННЫЕ")
+                document.getElementById("statusTab").textContent = "Вы неправильно ввели данные!"
             }
         })
         .catch(error => console.error('Error:', error));
 })
-function convertDate(dateString) {
-    const parts = dateString.split('.');
-    return parts[2] + '-' + parts[1] + '-' + parts[0];
-}
+
 
