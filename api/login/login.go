@@ -1,7 +1,6 @@
 package login
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"hackaton/log"
@@ -29,12 +28,5 @@ func Search(c *gin.Context) {
 		return
 	}
 	fmt.Println(student)
-	studJSON, err := json.Marshal(student)
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		c.Status(500)
-		return
-	}
-	fmt.Println(string(studJSON))
-	c.JSON(200, studJSON)
+	c.JSON(200, student)
 }

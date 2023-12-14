@@ -25,22 +25,12 @@ export default {
           },
         });
 
-        const response = await axios.post(apiUrl, {
+        const response = await axiosInstance.post(apiUrl, {
           option: selectedOption.value,
           query: searchQuery.value,
         });
-        searchResults.value = response.data.results;
-        console.log(response.data.results)
-//         // Декодирование строки Base64
-//         const base64 = response.data;
-//         const jsonStr = atob(base64);
-//
-// // Преобразование строки JSON в объект JavaScript
-//         const data = JSON.parse(jsonStr);
-//
-// // Теперь вы можете получить доступ к данным
-//         console.log(data);
-//         searchResults.value = data;
+        searchResults.value = response.data;
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching data from API:', error);
       }
@@ -147,14 +137,14 @@ export default {
                 </tr>
                 <tbody>
                   <tr v-for="result in searchResults" :key="result.id" @click="selectStudent(result)">
-                    <td>{{ result.full_name }} фыалфыа</td>
+                    <td>{{ result.full_name }} </td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div class="MemberCard" v-if="selectedStudent">
-              <h2>{{ selectedStudent.fullName }}</h2>
-                <p>Номер карточки: {{ selectedStudent.cardNumber }}</p>
+              <h2>{{ selectedStudent.full_name }}</h2>
+                <p>Номер карточки: {{ selectedStudent.card_number }}</p>
             </div>
           </div>
         </div>
