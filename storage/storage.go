@@ -49,7 +49,7 @@ func (store *PStorage) initTables() {
 		CREATE TABLE IF NOT EXISTS students (
 		    id SERIAL PRIMARY KEY,
 			card_number VARCHAR(255),
-    		full_name VARCHAR(255),
+    		full_name VARCHAR(255),//
     		birth_date VARCHAR(255),
     		photo_url TEXT,
     		housing_order_number VARCHAR(255),
