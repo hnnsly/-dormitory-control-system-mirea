@@ -18,12 +18,29 @@ export default {
       try {
         const apiUrl = 'http://localhost:8000/api/search';
 
+        const axiosInstance = axios.create({
+          baseURL: 'http://localhost:8080', // Замените на ваш URL
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        });
+
         const response = await axios.post(apiUrl, {
           option: selectedOption.value,
           query: searchQuery.value,
         });
-
         searchResults.value = response.data.results;
+        console.log(response.data.results)
+//         // Декодирование строки Base64
+//         const base64 = response.data;
+//         const jsonStr = atob(base64);
+//
+// // Преобразование строки JSON в объект JavaScript
+//         const data = JSON.parse(jsonStr);
+//
+// // Теперь вы можете получить доступ к данным
+//         console.log(data);
+//         searchResults.value = data;
       } catch (error) {
         console.error('Error fetching data from API:', error);
       }
@@ -107,7 +124,7 @@ export default {
             <button id="Search" @click="search">Поиск</button>
             <select id="MainList" v-model="selectedOption" @change="showInput">
               <option value="">Выбрать</option>
-              <option value="ФИО">ФИО</option>
+              <option value="full_name">ФИО</option>
               <option value="Номер карточки">Номер карточки</option>
               <option value="Дата Рождения">Дата Рождения</option>
               <option value="Дата зачисления">Дата зачисления</option>
@@ -130,7 +147,7 @@ export default {
                 </tr>
                 <tbody>
                   <tr v-for="result in searchResults" :key="result.id" @click="selectStudent(result)">
-                    <td>{{ result.fullName }}</td>
+                    <td>{{ result.full_name }} фыалфыа</td>
                   </tr>
                 </tbody>
               </table>

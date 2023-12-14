@@ -4,12 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"hackaton/log"
-	"time"
 )
 
 // ShowStudentsByCriteria получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
-func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
+func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]Student, error) {
 	fmt.Println(offset)
 	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
 
@@ -20,10 +19,7 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 	}
 	defer rows.Close()
 
-	students := make([][]Student, 0, 4)
-	studentSMOL := make([]Student, 0, 4)
-	var count int
-	var block int
+	students := make([]Student, 0, 4)
 	for rows.Next() {
 		var user Student
 		err := rows.Scan(
@@ -42,17 +38,7 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 			log.ErrorLogger.Println(err)
 			return nil, fmt.Errorf("Ошибка обработки результатов запроса")
 		}
-		studentSMOL = append(studentSMOL, user)
-		count++
-		if count%4 == 0 {
-			students = append(students, studentSMOL)
-			block++
-			count = 0
-			studentSMOL = make([]Student, 0, 4)
-		}
-	}
-	if count%4 != 0 {
-		students = append(students, studentSMOL)
+		students = append(students, user)
 	}
 
 	if err != nil {
@@ -132,14 +118,14 @@ func (st *PStorage) RewriteStudent(student Student) error {
 }
 
 type Student struct {
-	ID                    int       `json:"id"`
-	CardNumber            int       `json:"card_number"`
-	FullName              string    `json:"full_name"`
-	BirthDate             time.Time `json:"birth_date"`
-	PhotoUrl              string    `json:"photo_url"`
-	HousingOrderNumber    int       `json:"housing_order_number"`
-	EnrollmentOrderNumber int       `json:"enrollment_order_number"`
-	EnrollmentDate        time.Time `json:"enrollment_date"`
-	BirthPlace            string    `json:"birth_place"`
-	ResidenceAddress      string    `json:"residence_address"`
+	ID                    int    `json:"id"`
+	CardNumber            string `json:"card_number"`
+	FullName              string `json:"full_name"`
+	BirthDate             string `json:"birth_date"`
+	PhotoUrl              string `json:"photo_url"`
+	HousingOrderNumber    string `json:"housing_order_number"`
+	EnrollmentOrderNumber string `json:"enrollment_order_number"`
+	EnrollmentDate        string `json:"enrollment_date"`
+	BirthPlace            string `json:"birth_place"`
+	ResidenceAddress      string `json:"residence_address"`
 }
