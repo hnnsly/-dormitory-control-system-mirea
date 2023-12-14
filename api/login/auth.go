@@ -29,7 +29,7 @@ func Register(c *gin.Context) {
 		Password: []byte(string(password)),
 	}
 
-	err := storage.Store.AddUser(&user)
+	err := storage.Store.NewUser(&user)
 
 	if err != nil {
 		log.ErrorLogger.Println(err)
@@ -98,7 +98,7 @@ func Login(c *gin.Context) {
 	}
 
 	http.SetCookie(c.Writer, cookie)
-	//c.Writer.Header().Add("access-control-expose-headers", "Set-Cookie")
+	//c.Writer.Header().AddStudent("access-control-expose-headers", "Set-Cookie")
 	c.Redirect(302, "/students/find")
 }
 

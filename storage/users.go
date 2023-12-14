@@ -11,7 +11,7 @@ func (st *PStorage) SearchUser(user *types.User, token *jwt.StandardClaims) erro
 	return err
 }
 
-func (st *PStorage) AddUser(user *types.User) error {
+func (st *PStorage) NewUser(user *types.User) error {
 	_, err := st.Db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)",
 		user.Email, user.Password)
 	if err != nil {

@@ -117,7 +117,7 @@ func EditStudentAPI(c *gin.Context) {
 		EnrollmentOrderNumber: e,
 		BirthPlace:            filter["birth_place"],
 		ResidenceAddress:      filter["residence_address"]}
-	err = storage.Store.Rewrite(*student)
+	err = storage.Store.RewriteStudent(*student)
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.Status(500)
@@ -182,7 +182,7 @@ func AddStudentAPI(c *gin.Context) {
 		EnrollmentOrderNumber: e,
 		BirthPlace:            filter["birth_place"],
 		ResidenceAddress:      filter["residence_address"]}
-	err = storage.Store.Add(student)
+	err = storage.Store.AddStudent(student)
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.Status(500)

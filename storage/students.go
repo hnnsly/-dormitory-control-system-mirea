@@ -65,11 +65,11 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 	return students, nil
 }
 
-func (st *PStorage) Search(student *Student) error {
+func (st *PStorage) SearchStudent(student *Student) error {
 	return nil
 }
 
-func (st *PStorage) Add(student *Student) error {
+func (st *PStorage) AddStudent(student *Student) error {
 	query := `
 		INSERT INTO students (   
 			card_number,
@@ -99,7 +99,7 @@ func (st *PStorage) Add(student *Student) error {
 	return err
 }
 
-func (st *PStorage) Rewrite(student Student) error {
+func (st *PStorage) RewriteStudent(student Student) error {
 	query := `
 		UPDATE students
 		SET
