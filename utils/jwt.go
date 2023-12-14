@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"hackaton/internal/keys"
 	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/types"
@@ -17,7 +18,7 @@ func CheckJWTAuth(c *gin.Context) (*types.User, error) {
 		return nil, err
 	}
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(keys.SecretKey), nil
 	})
 
 	if err != nil {
@@ -59,7 +60,7 @@ func GenerateToken(issuer string) (string, error) {
 		ExpiresAt: time.Now().Add(time.Hour * 730).Unix(), //1 day
 	})
 
-	token, err := claims.SignedString([]byte(SecretKey))
+	token, err := claims.SignedString([]byte(keys.SecretKey))
 	if err != nil {
 		return "", err
 	}

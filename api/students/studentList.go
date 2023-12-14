@@ -11,20 +11,6 @@ import (
 	"strconv"
 )
 
-func FindPage(c *gin.Context) {
-	_, err := utils.CheckJWTAuth(c)
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		c.Redirect(302, "/login")
-		return
-
-	}
-
-	c.HTML(200, "students.page.tmpl.html", gin.H{
-		"title":  "Login",
-		"number": 0,
-	})
-}
 func ListStudents(c *gin.Context) {
 	fmt.Println(c.Request.URL, "akgjkad")
 	_, err := utils.CheckJWTAuth(c)
