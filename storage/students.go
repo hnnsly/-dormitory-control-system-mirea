@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"hackaton/log"
-	"time"
 )
 
 // ShowStudentsByCriteria получает на вход название столбца и нужное для отбора значение,
@@ -132,14 +131,14 @@ func (st *PStorage) Rewrite(student Student) error {
 }
 
 type Student struct {
-	ID                    int       `json:"id"`
-	CardNumber            int       `json:"card_number"`
-	FullName              string    `json:"full_name"`
-	BirthDate             time.Time `json:"birth_date"`
-	PhotoUrl              string    `json:"photo_url"`
-	HousingOrderNumber    int       `json:"housing_order_number"`
-	EnrollmentOrderNumber int       `json:"enrollment_order_number"`
-	EnrollmentDate        time.Time `json:"enrollment_date"`
-	BirthPlace            string    `json:"birth_place"`
-	ResidenceAddress      string    `json:"residence_address"`
+	ID                    int    `json:"id"`
+	CardNumber            string `json:"card_number"`
+	FullName              string `json:"full_name"`
+	BirthDate             string `json:"birth_date"`
+	PhotoUrl              string `json:"photo_url"`
+	HousingOrderNumber    string `json:"housing_order_number"`
+	EnrollmentOrderNumber string `json:"enrollment_order_number"`
+	EnrollmentDate        string `json:"enrollment_date"`
+	BirthPlace            string `json:"birth_place"`
+	ResidenceAddress      string `json:"residence_address"`
 }

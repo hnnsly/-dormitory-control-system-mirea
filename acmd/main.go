@@ -6,15 +6,14 @@ import (
 )
 
 func main() {
-	//database.ConnectStorage()
-	//databaseModels.InitStudentsDB()
-	//cache, err := templates.NewTemplateCache("web/html/")
-	//if err != nil {
-	//	loggers.ErrorLogger.Println(err)
-	//	return
-	//}
-	//templates.TemplateCache = cache
+
 	storage.ConnectStorage()
+	stud, _ := storage.Store.ShowStudentsByCriteria("full_name", "Игорь Петрович Тортуга", 0)
+	storage.Store.Add(&stud[0][0])
+	storage.Store.Add(&stud[0][0])
+	storage.Store.Add(&stud[0][0])
+	storage.Store.Add(&stud[0][0])
+	storage.Store.Add(&stud[0][0])
 
 	server := api.APIServer{Addr: ":8000"}
 	server.Run()
