@@ -41,16 +41,6 @@ func Register(c *gin.Context) {
 	c.JSON(200, user)
 }
 
-func createUser(user *types.User) error {
-	_, err := storage.Store.Db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)",
-		user.Email, user.Password)
-	if err != nil {
-		return err
-	}
-
-	return err
-}
-
 func Login(c *gin.Context) {
 	var data map[string]string
 

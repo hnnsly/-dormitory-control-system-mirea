@@ -16,6 +16,6 @@ func main() {
 	//templates.TemplateCache = cache
 	storage.ConnectStorage()
 
-	server := api.APIServer{Addr: ":8080"}
+	server := api.APIServer{Addr: ":8000"}
 	server.Run()
 }
