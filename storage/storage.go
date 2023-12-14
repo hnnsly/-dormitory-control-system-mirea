@@ -44,12 +44,12 @@ func (store *PStorage) initTables() {
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'users' table: %v", err))
 	}
-
+	//
 	_, err = store.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
 		    id SERIAL PRIMARY KEY,
 			card_number VARCHAR(255),
-    		full_name VARCHAR(255),//
+    		full_name VARCHAR(255),
     		birth_date VARCHAR(255),
     		photo_url TEXT,
     		housing_order_number VARCHAR(255),
