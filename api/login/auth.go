@@ -5,6 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"hackaton/internal/keys"
 	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/types"
@@ -111,7 +112,7 @@ func User(c *gin.Context) {
 	}
 
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(utils.SecretKey), nil
+		return []byte(keys.SecretKey), nil
 	})
 
 	if err != nil {

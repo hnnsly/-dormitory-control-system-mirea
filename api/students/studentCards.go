@@ -6,28 +6,27 @@ import (
 	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/utils"
-	"net/http"
 	"strconv"
 	"time"
 )
 
 func ShowStudentCard(c *gin.Context) {
-	_, err := utils.CheckJWTAuth(c)
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		c.Redirect(302, "/login")
-		return
-	}
-	stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		c.Status(http.StatusInternalServerError)
-	}
-	err = utils.TemplateCache["student.page.tmpl.html"].Execute(c.Writer, stud[0])
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		return
-	}
+	//_, err := utils.CheckJWTAuth(c)
+	//if err != nil {
+	//	log.ErrorLogger.Println(err)
+	//	c.Redirect(302, "/login")
+	//	return
+	//}
+	//stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
+	//if err != nil {
+	//	log.ErrorLogger.Println(err)
+	//	c.Status(http.StatusInternalServerError)
+	//}
+	//err = utils.TemplateCache["student.page.tmpl.html"].Execute(c.Writer, stud[0])
+	//if err != nil {
+	//	log.ErrorLogger.Println(err)
+	//	return
+	//}
 }
 func EditStudentPage(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
