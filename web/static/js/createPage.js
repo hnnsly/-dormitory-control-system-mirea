@@ -39,7 +39,9 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
                 window.location.href = response.url
             }
             if (response.ok) {
-                document.getElementById("statusTab").textContent = "Студент добавлен"
+                response.json().then(data => {
+                    document.getElementById("statusTab").textContent = "Студент добавлен и заселен по адресу " + data.address;
+                });
             }
             if (response.status == 400){
                 document.getElementById("statusTab").textContent = "Вы неправильно ввели данные!"

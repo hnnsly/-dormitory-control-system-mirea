@@ -77,7 +77,7 @@ func (st *PStorage) Delete(studentID int) error {
 		return err
 	}
 
-	_, err = st.Db.Exec("UPDATE residences SET is_occupied = 0 WHERE id = $1", addrID)
+	_, err = st.Db.Exec("UPDATE residences SET is_occupied = 0 WHERE is_occupied = $1", studentID)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (st *PStorage) Delete(studentID int) error {
 	return nil
 }
 
-func (st *PStorage) Add(student *Student) error {
+func (st *PStorage) Add(student *Student) (int, error) {
 	query := `
 		INSERT INTO students (   
 			card_number,
@@ -112,17 +112,17 @@ func (st *PStorage) Add(student *Student) error {
 	).Scan(&studentID)
 	addr, addrID, err := st.Settle(studentID)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	query = `UPDATE students SET residence_address = $1, residence_id = $2 WHERE id = $3`
 
 	_, err = st.Db.Exec(query, addr, addrID, studentID)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return studentID, nil
 }
 
 func (st *PStorage) Rewrite(student Student) error {

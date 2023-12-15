@@ -47,10 +47,15 @@ func EditStudentPage(c *gin.Context) {
 		log.ErrorLogger.Println(err)
 		c.Status(http.StatusInternalServerError)
 	}
-	c.HTML(200, "edit.page.tmpl.html", gin.H{
-		"title":   "Редактирование информации о студенте",
-		"Student": stud[0][0],
-	})
+	if len(stud) == 0 {
+		c.HTML(200, "card.page.tmpl.html", gin.H{
+			"Student": nil,
+		})
+	} else {
+		c.HTML(200, "edit.page.tmpl.html", gin.H{
+			"Student": stud[0][0],
+		})
+	}
 }
 func AddStudentPage(c *gin.Context) {
 	_, err := utils.CheckJWTAuth(c)
@@ -131,13 +136,17 @@ func AddStudentAPI(c *gin.Context) {
 		EnrollmentDate:        filter["enrollment_date"],
 		EnrollmentOrderNumber: filter["enrollment_order_number"],
 		BirthPlace:            filter["birth_place"]}
-	err = storage.Store.Add(student)
+	id, err := storage.Store.Add(student)
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.Status(500)
 		return
 	}
-	c.Status(200)
+	stud, _ := storage.Store.ShowStudentsByCriteria("id", strconv.Itoa(id), 0)
+	adr := stud[0][0].ResidenceAddress
+	c.JSON(200, gin.H{
+		"address": adr,
+	})
 }
 
 func DeleteAPI(c *gin.Context) {
