@@ -89,6 +89,9 @@ document.getElementById('deleteButton').addEventListener('click', function(e) {
             if (response.status == 400){
                 document.getElementById("statusTab").textContent = "Вы неправильно ввели данные!"
             }
+            if (response.status == 500){
+                document.getElementById("statusTab").textContent = "На данный момент все комнаты заняты, попробуйте позже"
+            }
         })
         .catch(error => console.error('Error:', error));
 })
