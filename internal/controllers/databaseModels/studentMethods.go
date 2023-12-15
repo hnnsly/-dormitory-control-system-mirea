@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"hackaton/pkg/database"
 	"hackaton/pkg/loggers"
+	"log"
 )
 
 type StudentModel struct {
@@ -85,11 +86,11 @@ func (m *StudentModel) Add(student *Student) error {
 			housing_order_number,
 			enrollment_order_number,
 			enrollment_date,
-			birth_place,
-			residence_address
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+			birth_place        
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
 
-	_, err := StudentsDB.DB.Exec(
+	var studentID int
+	err := m.DB.QueryRow(
 		query,
 		student.CardNumber,
 		student.FullName,
@@ -100,9 +101,19 @@ func (m *StudentModel) Add(student *Student) error {
 		student.EnrollmentDate,
 		student.BirthPlace,
 		student.ResidenceAddress,
-	)
+	).Scan(&studentID)
 
-	return err
+	addr, addrID, err := m.Settle(studentID)
+
+	query = `UPDATE residences SET residence_address = $1, residence_id = $2 WHERE id = $3`
+
+	m.DB.Exec(query, addr, addrID, studentID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (m *StudentModel) Rewrite(student Student) error {
@@ -116,12 +127,15 @@ func (m *StudentModel) Rewrite(student Student) error {
 			enrollment_order_number = $6,
 			enrollment_date = $7,
 			birth_place = $8,
-			residence_address = $9
+			residence_address = $9,
+			residence_id = $10
 		WHERE
 			id = $1
 	`
 
-	_, err := StudentsDB.DB.Exec(
+	newAddr, addrID, err := StudentsDB.Settle(student.ID)
+
+	_, err = StudentsDB.DB.Exec(
 		query,
 		student.ID,
 		student.FullName,
@@ -131,8 +145,29 @@ func (m *StudentModel) Rewrite(student Student) error {
 		student.EnrollmentOrderNumber,
 		student.EnrollmentDate,
 		student.BirthPlace,
-		student.ResidenceAddress,
+		newAddr,
+		addrID,
 	)
 
 	return err
+}
+
+func (m *StudentModel) Settle(studentID int) (string, int, error) {
+
+	var address string
+	var roomID, floor, room int
+	err := m.DB.QueryRow("SELECT id, address, floor, room FROM residences WHERE is_occupied = 0 LIMIT 1").Scan(&roomID, &address, &floor, &room)
+	if err != nil {
+		log.Println("Error querying room:", err)
+		return "", 0, err
+	}
+
+	_, err = m.DB.Exec("UPDATE residences SET is_occupied = $1 WHERE id = $2", studentID, roomID)
+	if err != nil {
+		return "", 0, err
+	}
+
+	roomInfo := fmt.Sprintf("%s, %d этаж, %d комната", address, floor, room)
+
+	return roomInfo, roomID, nil
 }

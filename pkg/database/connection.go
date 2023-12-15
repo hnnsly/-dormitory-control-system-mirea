@@ -42,17 +42,28 @@ func createTables() {
 	_, err = DB.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
 		    id SERIAL PRIMARY KEY,
-			card_number INT,
+			card_number VARCHAR(255),
     		full_name VARCHAR(255),
-    		birth_date DATE,
+    		birth_date VARCHAR(255),
     		photo_url TEXT,
-    		housing_order_number INT,
-    		enrollment_order_number INT,
-    		enrollment_date DATE,
+    		housing_order_number VARCHAR(255),
+    		enrollment_order_number VARCHAR(255),
+    		enrollment_date VARCHAR(255),
     		birth_place VARCHAR(255),
-    		residence_address VARCHAR(255)
+    		residence_address VARCHAR(255),
+    		residence_id INT
 		);
 	`)
+
+	_, err = DB.Exec(`CREATE TABLE IF NOT EXISTS residences (
+			id SERIAL,
+			address VARCHAR(255),
+			floor INTEGER,
+			room INTEGER,
+			place INTEGER,
+			is_occupied INTEGER
+		)
+`)
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'students' table: %v", err))
 	}
