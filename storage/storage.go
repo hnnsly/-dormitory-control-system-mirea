@@ -87,7 +87,7 @@ type PStorage struct { // PStorage - PostgreSQL Store
 
 func (store *PStorage) InitResidences() error {
 	var rowCount int
-	err := store.Db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", residences)).Scan(&rowCount)
+	store.Db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", "residences")).Scan(&rowCount)
 	if rowCount != 0 {
 		return nil
 	}
