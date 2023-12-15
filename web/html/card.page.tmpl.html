@@ -16,6 +16,7 @@
     <hr>
 </div>
 <div class="text-end" style="margin-bottom: 10px;"><button class="btn btn-success text-end" type="submit" style="margin-left: 15px;margin-right: 104px;" id="backButton">Найти студентов</button></div>
+{{if .Student}}
 {{$element:= .Student}}
 <div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 30px;margin-bottom: 10px;">
     <div class="card text-start" style="max-width: 1500px; margin-left: 15px; margin-right: 15px;">
@@ -39,6 +40,11 @@
         </div>
     </div>
 </div>
+{{else}}
+    <div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 30px;margin-bottom: 10px;">
+        Студент не найден! Неправильный запрос, или же успешное удаление
+    </div>
+{{end}}
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/js/cardPage.js"></script>
 </body>

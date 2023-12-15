@@ -53,4 +53,45 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
         .catch(error => console.error('Error:', error));
 })
 
+document.getElementById('deleteButton').addEventListener('click', function(e) {
+    const userConfirmation = confirm("Вы уверены, что хотите удалить запись студента?");
+    if (!userConfirmation) {
+        event.preventDefault();
+    }
+
+    const queryString = window.location.search;
+
+// Создаем объект URLSearchParams, передавая строку запроса
+    const params = new URLSearchParams(queryString);
+
+// Получаем значения параметров
+    const id = params.get('id');
+    // Создаем объект для отправки данных в формате JSON
+    var data = {
+        id: id,
+
+    };
+
+    fetch("/api/deletestudent", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url
+            }
+            if (response.ok) {
+                document.getElementById("statusTab").textContent = "Данные изменены"
+            }
+            if (response.status == 400){
+                document.getElementById("statusTab").textContent = "Вы неправильно ввели данные!"
+            }
+        })
+        .catch(error => console.error('Error:', error));
+})
+
+
 

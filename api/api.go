@@ -23,6 +23,7 @@ func (s *APIServer) Run() {
 	app.GET("/api/user", login2.User)
 	app.POST("/api/addstudent", students.AddStudentAPI)
 	app.POST("/api/editstudent", students.EditStudentAPI)
+	app.POST("/api/deletestudent", students.DeleteAPI)
 	app.POST("/api/logout", login2.Logout)
 	// TODO: Роутер к главной странице, судя по всему и гет и пост
 	//app.GET("/login", controllers.Logout)
