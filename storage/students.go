@@ -64,10 +64,6 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 	return students, nil
 }
 
-func (st *PStorage) Search(student *Student) error {
-	return nil
-}
-
 func (st *PStorage) Add(student *Student) error {
 	query := `
 		INSERT INTO students (   
@@ -78,11 +74,11 @@ func (st *PStorage) Add(student *Student) error {
 			housing_order_number,
 			enrollment_order_number,
 			enrollment_date,
-			birth_place,
-			residence_address
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+			birth_place        
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
 
-	_, err := st.Db.Exec(
+	var studentID int
+	err := st.Db.QueryRow(
 		query,
 		student.CardNumber,
 		student.FullName,
@@ -93,9 +89,19 @@ func (st *PStorage) Add(student *Student) error {
 		student.EnrollmentDate,
 		student.BirthPlace,
 		student.ResidenceAddress,
-	)
+	).Scan(&studentID)
 
-	return err
+	addr, addrID, err := st.Settle(studentID)
+
+	query = `UPDATE residences SET residence_address = $1, residence_id = $2 WHERE id = $3`
+
+	st.Db.Exec(query, addr, addrID, studentID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (st *PStorage) Rewrite(student Student) error {
@@ -109,12 +115,15 @@ func (st *PStorage) Rewrite(student Student) error {
 			enrollment_order_number = $6,
 			enrollment_date = $7,
 			birth_place = $8,
-			residence_address = $9
+			residence_address = $9,
+			residence_id = $10
 		WHERE
 			id = $1
 	`
 
-	_, err := st.Db.Exec(
+	newAddr, addrID, err := st.Settle(student.ID)
+
+	_, err = st.Db.Exec(
 		query,
 		student.ID,
 		student.FullName,
@@ -124,10 +133,31 @@ func (st *PStorage) Rewrite(student Student) error {
 		student.EnrollmentOrderNumber,
 		student.EnrollmentDate,
 		student.BirthPlace,
-		student.ResidenceAddress,
+		newAddr,
+		addrID,
 	)
 
 	return err
+}
+
+func (st *PStorage) Settle(studentID int) (string, int, error) {
+
+	var address string
+	var roomID, floor, room int
+	err := st.Db.QueryRow("SELECT id, address, floor, room FROM residences WHERE is_occupied = 0 LIMIT 1").Scan(&roomID, &address, &floor, &room)
+	if err != nil {
+		log.ErrorLogger.Println("Error querying room:", err)
+		return "", 0, err
+	}
+
+	_, err = st.Db.Exec("UPDATE residences SET is_occupied = $1 WHERE id = $2", studentID, roomID)
+	if err != nil {
+		return "", 0, err
+	}
+
+	roomInfo := fmt.Sprintf("%s, %d этаж, %d комната", address, floor, room)
+
+	return roomInfo, roomID, nil
 }
 
 type Student struct {
