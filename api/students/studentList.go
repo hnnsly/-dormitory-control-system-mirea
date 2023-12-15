@@ -90,7 +90,7 @@ func ListStudents(c *gin.Context) {
 	if page < 3 {
 		page = 3
 	}
-	c.HTML(200, "students.page.tmpl.html", gin.H{
+	data := gin.H{
 		"title":    "Login",
 		"Students": templateData,
 		"Name":     filters["name"],
@@ -103,5 +103,12 @@ func ListStudents(c *gin.Context) {
 		"PageNext": pageNext,
 		"PagePrev": pagePrev,
 		"Query":    queryString,
-	})
+	}
+	err = utils.TemplateCache["students.page.tmpl.html"].Execute(c.Writer, data)
+	if err != nil {
+		log.ErrorLogger.Println(err)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+	//c.HTML(200, "students.page.tmpl.html", data)
 }

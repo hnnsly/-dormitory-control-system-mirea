@@ -24,13 +24,19 @@ func ShowStudentCard(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 	}
 	if len(stud) == 0 {
-		c.HTML(200, "card.page.tmpl.html", gin.H{
-			"Student": nil,
-		})
+		err = utils.TemplateCache["card.page.tmpl.html"].Execute(c.Writer, nil)
+		if err != nil {
+			log.ErrorLogger.Println(err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
 	} else {
-		c.HTML(200, "card.page.tmpl.html", gin.H{
-			"Student": stud[0][0],
-		})
+		err = utils.TemplateCache["card.page.tmpl.html"].Execute(c.Writer, stud[0][0])
+		if err != nil {
+			log.ErrorLogger.Println(err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
 	}
 
 }
@@ -48,13 +54,19 @@ func EditStudentPage(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 	}
 	if len(stud) == 0 {
-		c.HTML(200, "card.page.tmpl.html", gin.H{
-			"Student": nil,
-		})
+		err = utils.TemplateCache["card.page.tmpl.html"].Execute(c.Writer, nil)
+		if err != nil {
+			log.ErrorLogger.Println(err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
 	} else {
-		c.HTML(200, "edit.page.tmpl.html", gin.H{
-			"Student": stud[0][0],
-		})
+		err = utils.TemplateCache["edit.page.tmpl.html"].Execute(c.Writer, stud[0][0])
+		if err != nil {
+			log.ErrorLogger.Println(err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
 	}
 }
 func AddStudentPage(c *gin.Context) {
@@ -65,9 +77,13 @@ func AddStudentPage(c *gin.Context) {
 		return
 
 	}
-	c.HTML(200, "add.page.tmpl.html", gin.H{
-		"title": "Добавление студента",
-	})
+
+	err = utils.TemplateCache["add.page.tmpl.html"].Execute(c.Writer, nil)
+	if err != nil {
+		log.ErrorLogger.Println(err)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
 }
 
 func EditStudentAPI(c *gin.Context) {

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"hackaton/log"
 	"html/template"
 	"path/filepath"
@@ -17,6 +18,7 @@ func NewTemplateCache(dir string) (map[string]*template.Template, error) {
 	}
 	for _, page := range pages {
 		name := filepath.Base(page)
+		fmt.Println(name)
 		ts, err := template.ParseFiles(page)
 		if err != nil {
 			log.ErrorLogger.Println(err)
