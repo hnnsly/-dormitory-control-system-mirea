@@ -64,14 +64,14 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 	return students, nil
 }
 
-func (st *PStorage) Delete(student *Student) error {
+func (st *PStorage) Delete(studentID int) error {
 	var addrID int
-	err := st.Db.QueryRow("SELECT residence_id FROM students WHERE id = $1", student.ID).Scan(&addrID)
+	err := st.Db.QueryRow("SELECT residence_id FROM students WHERE id = $1", studentID).Scan(&addrID)
 	if err != nil {
 		return err
 	}
 
-	_, err = st.Db.Exec("DELETE FROM students WHERE id = $1", student.ID)
+	_, err = st.Db.Exec("DELETE FROM students WHERE id = $1", studentID)
 	if err != nil {
 		return err
 	}
