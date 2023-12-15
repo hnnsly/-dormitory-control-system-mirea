@@ -1,30 +1,34 @@
-document.getElementById('createForm').addEventListener('submit', function(e) {
+document.getElementById('editForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     // Создаем новый объект FormData
     var formData = new FormData(this);
-    const firstname = formData.get('firstname');
-    const lastname = formData.get('lastname');
-    const lastname2 = formData.get('lastname2');
+    const full_name = formData.get('full_name');
     const number = formData.get('number')
     const date_of_birth = formData.get('date_of_birth');
     const place_of_birth = formData.get('birth_place');
     const enrol_date = formData.get('enrol_date');
     const housing_number = formData.get('housing_number');
     const enrol_number = formData.get('enrol_number');
-    const housing = formData.get('housing');
     //TODO:profile pic
 
+    const queryString = window.location.search;
+
+// Создаем объект URLSearchParams, передавая строку запроса
+    const params = new URLSearchParams(queryString);
+
+// Получаем значения параметров
+    const id = params.get('id');
     // Создаем объект для отправки данных в формате JSON
     var data = {
-        full_name: (firstname + " " + lastname + " " + lastname2),
+        id: id,
+        full_name: full_name,
         card_number: number,
         birth_date: date_of_birth,
         housing_order_number: housing_number,
         enrollment_order_number: enrol_number,
         enrollment_date: enrol_date,
         birth_place: place_of_birth,
-        residence_address: housing,
 
     };
 

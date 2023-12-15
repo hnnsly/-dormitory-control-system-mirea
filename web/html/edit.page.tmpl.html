@@ -15,7 +15,7 @@
   <h1 class="text-center">Информация о студенте</h1>
   <hr>
 </div>
-<div class="text-end" style="margin-bottom: 10px;"><button class="btn btn-success text-end" type="submit" style="margin-left: 15px;margin-right: 104px;" id="backButton">Найти студентов</button></div>
+<div class="text-end" style="margin-bottom: 10px;"><button class="btn btn-success text-end" type="submit" style="margin-left: 15px;margin-right: 104px;" id="backButton">Вернуться к студенту</button></div>
 {{$element:= .Student}}
 <div class="d-xxl-flex justify-content-xxl-center" style="margin-top: 30px;margin-bottom: 10px;">
   <div class="card text-start" style="max-width: 1500px; margin-left: 15px; margin-right: 15px;">
@@ -23,7 +23,7 @@
       <div class="col-md-4">
         <img class="rounded card-img-top w-100 d-block" src="{{$element.PhotoUrl}}" style="max-height: 500px; margin: 0px; padding: 2px;">
       </div>
-      <form id="createForm">
+      <form id="editForm">
       <div class="col-md-8">
         <div class="card-body">
           <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">ФИО</label><input class="form-control" type="text" name="full_name" placeholder="Иванов Иван Иванович" value={{$element.FullName}}></h4>
@@ -33,16 +33,16 @@
           <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Номер приказа о предоставлении общежития</label><input class="form-control" type="text" name="housing_number" placeholder="Номер приказа" value={{$element.HousingOrderNumber}}></h4>
           <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Номер приказа о зачислении</label><input class="form-control" type="text" name="enrol_number" placeholder="Номер приказа" value={{$element.EnrollmentOrderNumber}}></h4>
           <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Дата зачисления</label><input class="form-control" type="text" name="enrol_date" placeholder="01.02.2023" value={{$element.EnrollmentDate}}></h4>
-          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Адрес проживания</label><input class="form-control" type="text" name="housing" placeholder="1" value={{$element.ResidenceAddress}}></h4>
-          <button class="btn btn-primary mt-3" type="button">Редактировать</button>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Адрес проживания</label><input class="form-control" type="text" name="housing" placeholder="1" disabled="disabled" value={{$element.ResidenceAddress}}></h4>
+          <button class="btn btn-primary mt-3" type="submit">Редактировать</button>
         </div>
       </div>
         </form>
     </div>
   </div>
 </div>
+<script src="/static/js/editPage.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<script src="/static/js/cardPage.js"></script>
 </body>
 
 </html>

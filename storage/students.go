@@ -36,6 +36,7 @@ func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([]
 			&user.EnrollmentDate,
 			&user.BirthPlace,
 			&user.ResidenceAddress,
+			&user.ResidenceID,
 		)
 		if err != nil {
 			log.ErrorLogger.Println(err)
@@ -191,4 +192,5 @@ type Student struct {
 	EnrollmentDate        string `json:"enrollment_date"`
 	BirthPlace            string `json:"birth_place"`
 	ResidenceAddress      string `json:"residence_address"`
+	ResidenceID           int    `json:"residence_id"`
 }

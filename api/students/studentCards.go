@@ -69,12 +69,11 @@ func EditStudentAPI(c *gin.Context) {
 	var filter map[string]string
 
 	if err := c.BindJSON(&filter); err != nil {
-		fmt.Println("gerre")
 		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(filter["id"])
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.JSON(400, gin.H{"message": "invalid request"})
@@ -89,15 +88,14 @@ func EditStudentAPI(c *gin.Context) {
 		HousingOrderNumber:    filter["housing_order_number"],
 		EnrollmentDate:        filter["enrollment_date"],
 		EnrollmentOrderNumber: filter["enrollment_order_number"],
-		BirthPlace:            filter["birth_place"],
-		ResidenceAddress:      filter["residence_address"]}
+		BirthPlace:            filter["birth_place"]}
 	err = storage.Store.Rewrite(*student)
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.Status(500)
 		return
 	}
-	c.Status(200)
+	c.Redirect(302, "/students/show?id="+strconv.Itoa(id))
 
 }
 func AddStudentAPI(c *gin.Context) {
@@ -124,8 +122,7 @@ func AddStudentAPI(c *gin.Context) {
 		HousingOrderNumber:    filter["housing_order_number"],
 		EnrollmentDate:        filter["enrollment_date"],
 		EnrollmentOrderNumber: filter["enrollment_order_number"],
-		BirthPlace:            filter["birth_place"],
-		ResidenceAddress:      filter["residence_address"]}
+		BirthPlace:            filter["birth_place"]}
 	err = storage.Store.Add(student)
 	if err != nil {
 		log.ErrorLogger.Println(err)

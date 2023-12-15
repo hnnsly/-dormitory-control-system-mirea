@@ -12,8 +12,8 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
     const enrol_date = formData.get('enrol_date');
     const housing_number = formData.get('housing_number');
     const enrol_number = formData.get('enrol_number');
-    const housing = formData.get('housing');
     //TODO:profile pic
+
 
     // Создаем объект для отправки данных в формате JSON
     var data = {
@@ -24,7 +24,6 @@ document.getElementById('createForm').addEventListener('submit', function(e) {
         enrollment_order_number: enrol_number,
         enrollment_date: enrol_date,
         birth_place: place_of_birth,
-        residence_address: housing,
 
     };
 
