@@ -109,15 +109,15 @@ func (st *PStorage) Add(student *Student) error {
 		student.EnrollmentOrderNumber,
 		student.EnrollmentDate,
 		student.BirthPlace,
-		student.ResidenceAddress,
 	).Scan(&studentID)
-
 	addr, addrID, err := st.Settle(studentID)
+	if err != nil {
+		return err
+	}
 
-	query = `UPDATE residences SET residence_address = $1, residence_id = $2 WHERE id = $3`
+	query = `UPDATE students SET residence_address = $1, residence_id = $2 WHERE id = $3`
 
-	st.Db.Exec(query, addr, addrID, studentID)
-
+	_, err = st.Db.Exec(query, addr, addrID, studentID)
 	if err != nil {
 		return err
 	}

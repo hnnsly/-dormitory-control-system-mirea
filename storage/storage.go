@@ -62,7 +62,7 @@ func (store *PStorage) initTables() {
 	`)
 
 	_, err = store.Db.Exec(`CREATE TABLE IF NOT EXISTS residences (
-			id SERIAL,
+			id SERIAL PRIMARY KEY,
 			address VARCHAR(255),
 			floor INTEGER,
 			room INTEGER,
