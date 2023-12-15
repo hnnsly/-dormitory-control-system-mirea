@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"math/rand"
 )
 
 var Store PStorage
@@ -11,7 +12,11 @@ var Store PStorage
 func ConnectStorage() {
 
 	Store.createStorage()
-	Store.initTables()
+
+	err := Store.InitResidences()
+	if err != nil {
+		panic(fmt.Sprintf("could not fill 'Общага' table: %v", err))
+	}
 
 }
 
@@ -73,8 +78,39 @@ func (store *PStorage) initTables() {
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'students' table: %v", err))
 	}
+
 }
 
 type PStorage struct { // PStorage - PostgreSQL Store
 	Db *sql.DB
+}
+
+func (store *PStorage) InitResidences() error {
+	var rowCount int
+	err := store.Db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", residences)).Scan(&rowCount)
+	if rowCount != 0 {
+		return nil
+	}
+	addresses := []string{"Ул. Пушкина, д. 21", "Ул. Вернадского, д.86к4", "Ул. Асанова, д.14к8"}
+	c := 0
+	for _, address := range addresses {
+		for floor := 1; floor <= rand.Intn(3)+4; floor++ {
+			for room := 1; room <= rand.Intn(120)+20; room++ {
+				lim := 0
+				if room%2 == 0 {
+					lim = 3
+				} else {
+					lim = 2
+				}
+				for place := 1; place <= lim; place++ {
+					c++
+					_, err := store.Db.Exec("INSERT INTO residences VALUES ($1, $2, $3, $4, $5,$6)", c, address, floor, room, place, 0)
+					if err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+	return nil
 }
