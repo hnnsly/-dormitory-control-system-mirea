@@ -56,9 +56,20 @@ func (store *PStorage) initTables() {
     		enrollment_order_number VARCHAR(255),
     		enrollment_date VARCHAR(255),
     		birth_place VARCHAR(255),
-    		residence_address VARCHAR(255)
+    		residence_address VARCHAR(255),
+    		residence_id INT
 		);
 	`)
+
+	_, err = store.Db.Exec(`CREATE TABLE IF NOT EXISTS residences (
+			id SERIAL,
+			address VARCHAR(255),
+			floor INTEGER,
+			room INTEGER,
+			place INTEGER,
+			is_occupied INTEGER
+		)
+`)
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'students' table: %v", err))
 	}
