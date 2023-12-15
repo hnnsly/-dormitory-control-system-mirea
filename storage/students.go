@@ -10,7 +10,13 @@ import (
 // возвращает []string с ФИО всех студентов, подходящих под критерии
 func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
 	fmt.Println(offset)
-	query := fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
+	var query string
+	if column == "residence_address" {
+		query = fmt.Sprintf("SELECT * FROM students WHERE %s LIKE $1 OFFSET $2 LIMIT 12", column)
+		value = "%" + value + "%"
+	} else {
+		query = fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
+	}
 
 	rows, err := st.Db.Query(query, value, offset)
 	if err != nil {
