@@ -4,9 +4,11 @@ services:
   web:
     build: .
     ports:
-      - "8001:8001"
+      - "8000:8000"
     depends_on:
       - db
+    networks:
+      - my_network
   db:
     image: postgres:latest
     volumes:
@@ -16,7 +18,12 @@ services:
       POSTGRES_PASSWORD: secretpassword
       POSTGRES_DB: dormitory
     ports:
-      - "5433:5433"
+      - "5432:5432"
+    networks:
+      - my_network
+
+networks:
+  my_network:
 
 volumes:
   postgres_data:
