@@ -13,6 +13,7 @@ func (s *APIServer) Run() {
 	app.LoadHTMLGlob("web/html/*")
 	app.Static("/static", "./web/static")
 
+	app.GET("/", login2.Redirect)
 	app.GET("/login", login2.Start)
 	app.GET("/students/find", students.ListStudents)
 	app.GET("/students/show", students.ShowStudentCard)

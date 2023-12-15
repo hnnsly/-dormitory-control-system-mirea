@@ -92,6 +92,10 @@ func EditStudentAPI(c *gin.Context) {
 		return
 	}
 	stud, _ := storage.Store.ShowStudentsByCriteria("id", strconv.Itoa(id), 0)
+	if len(stud) == 0 {
+		c.Redirect(302, "/students/find")
+		return
+	}
 	student := &storage.Student{
 		ID:                    id,
 		CardNumber:            filter["card_number"],

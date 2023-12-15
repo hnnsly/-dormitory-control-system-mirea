@@ -15,15 +15,18 @@ func ConnectStorage() {
 	Store.createStorage()
 
 	err := Store.InitResidences()
-	err = Store.InitStudents()
 	if err != nil {
 		panic(fmt.Sprintf("could not fill 'Общага' table: %v", err))
+	}
+	err = Store.InitStudents()
+	if err != nil {
+		panic(fmt.Sprintf("could not fill 'Студенты' table: %v", err))
 	}
 
 }
 
 func (store *PStorage) createStorage() {
-	connectionString := "host=localhost port=5432 user=postgres password=7595 dbname=dormitory sslmode=disable"
+	connectionString := "host=localhost port=5432 user=postgres password=testtest dbname=dormitory sslmode=disable"
 	db, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
@@ -133,7 +136,7 @@ func (store *PStorage) InitStudents() error {
 		"Кузнецов Кузнец Кузнецович", "Сидоров Сидор Сидорович", "Новиков Новик Новикович",
 		"Соколов Сокол Соколович", "Лебедев Лебедь Лебедевич", "Козлов Козел Козлович"}
 	birthDates := func() string { return fmt.Sprintf("%v.%v.200%v", rand.Intn(30), rand.Intn(13), rand.Intn(10)) }
-	photoURLs := func() string { return fmt.Sprintf("url%v%v", rand.Intn(1000), rand.Intn(10000)) }
+	//photoURLs := func() string { return fmt.Sprintf("url%v%v", rand.Intn(1000), rand.Intn(10000)) }
 	housingOrderNumbers := func() string { return fmt.Sprintf("%v-%v%v", rand.Intn(100), rand.Intn(100), rand.Intn(60)) }
 	enrollmentOrderNumbers := func() string { return fmt.Sprintf("%v-%v%v", rand.Intn(100), rand.Intn(100), rand.Intn(60)) }
 	enrollmentDates := func() string { return fmt.Sprintf("%v.%v.20%v", rand.Intn(30), rand.Intn(13), rand.Intn(6)+16) }
@@ -144,7 +147,7 @@ func (store *PStorage) InitStudents() error {
 			CardNumber:            cardNumber(),
 			FullName:              fullNames[i],
 			BirthDate:             birthDates(),
-			PhotoUrl:              photoURLs(),
+			PhotoUrl:              "https://thumb.tildacdn.com/tild6439-3438-4437-b065-303734623661/-/resize/880x/-/format/webp/_1_5.png",
 			HousingOrderNumber:    housingOrderNumbers(),
 			EnrollmentOrderNumber: enrollmentOrderNumbers(),
 			EnrollmentDate:        enrollmentDates(),
