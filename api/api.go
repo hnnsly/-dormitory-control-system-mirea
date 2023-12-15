@@ -10,7 +10,7 @@ func (s *APIServer) Run() {
 
 	app := gin.Default()
 
-	app.LoadHTMLGlob("/app/web/html/*.html")
+	app.LoadHTMLGlob("web/html/*.html")
 	app.Static("/static", "/app/web/static")
 
 	app.GET("/", login2.Redirect)

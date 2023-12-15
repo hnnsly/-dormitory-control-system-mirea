@@ -26,7 +26,7 @@ func ConnectStorage() {
 }
 
 func (store *PStorage) createStorage() {
-	connectionString := "host=db port=5432 user=postgres password=secretpassword dbname=dormitory sslmode=disable"
+	connectionString := "host=localhost port=5432 user=postgres password=testtest dbname=dormitory sslmode=disable"
 	db, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
