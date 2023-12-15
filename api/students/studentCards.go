@@ -35,8 +35,14 @@ func EditStudentPage(c *gin.Context) {
 		return
 
 	}
+	stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
+	if err != nil {
+		log.ErrorLogger.Println(err)
+		c.Status(http.StatusInternalServerError)
+	}
 	c.HTML(200, "edit.page.tmpl.html", gin.H{
-		"title": "Редактирование информации о студенте",
+		"title":   "Редактирование информации о студенте",
+		"Student": stud[0][0],
 	})
 }
 func AddStudentPage(c *gin.Context) {

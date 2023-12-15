@@ -30,10 +30,10 @@
                     <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Дата рождения: {{$element.BirthDate}}</h6>
                     <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Место рождения: {{$element.BirthPlace}}</h6>
                     <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Номер приказа о предоставлении общежития: {{$element.HousingOrderNumber}}</h6>
-                    <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Номер приказа озачислении: {{$element.EnrollmentOrderNumber}}</h6>
-                    <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Дата зачисления: {{$element.EnrollmentDate}} корпус</h6>
+                    <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Номер приказа о зачислении: {{$element.EnrollmentOrderNumber}}</h6>
+                    <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Дата зачисления: {{$element.EnrollmentDate}}</h6>
                     <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Адрес проживания: {{$element.ResidenceAddress}} корпус</h6>
-                    <button class="btn btn-primary mt-3" type="button">Редактировать</button>
+                    <button class="btn btn-primary mt-3" type="button" onclick="window.location.href='/students/edit?id={{$element.ID}}'">Редактировать</button>
                 </div>
             </div>
         </div>

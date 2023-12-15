@@ -23,19 +23,21 @@
       <div class="col-md-4">
         <img class="rounded card-img-top w-100 d-block" src="{{$element.PhotoUrl}}" style="max-height: 500px; margin: 0px; padding: 2px;">
       </div>
+      <form id="createForm">
       <div class="col-md-8">
         <div class="card-body">
-          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px">{{$element.FullName}}</h4>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 30px;">Номер карты: {{$element.CardNumber}}</h6>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Дата рождения: {{$element.BirthDate}}</h6>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Место рождения: {{$element.BirthPlace}}</h6>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Номер приказа о предоставлении общежития: {{$element.HousingOrderNumber}}</h6>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Номер приказа озачислении: {{$element.EnrollmentOrderNumber}}</h6>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Дата зачисления: {{$element.EnrollmentDate}} корпус</h6>
-          <h6 class="text-muted card-subtitle mb-4" style="font-size: 20px;">Адрес проживания: {{$element.ResidenceAddress}} корпус</h6>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">ФИО</label><input class="form-control" type="text" name="full_name" placeholder="Иванов Иван Иванович" value={{$element.FullName}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Номер карты</label><input class="form-control" type="text" name="number" placeholder="Номер карты" value={{$element.CardNumber}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Дата рождения</label><input class="form-control" type="text" name="date_of_birth" placeholder="01.08.2003" value={{$element.BirthDate}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Место рождения</label><input class="form-control" type="text" name="birth_place" placeholder="г.Москва" value={{$element.BirthPlace}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Номер приказа о предоставлении общежития</label><input class="form-control" type="text" name="housing_number" placeholder="Номер приказа" value={{$element.HousingOrderNumber}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Номер приказа о зачислении</label><input class="form-control" type="text" name="enrol_number" placeholder="Номер приказа" value={{$element.EnrollmentOrderNumber}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Дата зачисления</label><input class="form-control" type="text" name="enrol_date" placeholder="01.02.2023" value={{$element.EnrollmentDate}}></h4>
+          <h4 class="card-title" style="margin-bottom: 25px; font-size: 35px"><label class="form-label">Адрес проживания</label><input class="form-control" type="text" name="housing" placeholder="1" value={{$element.ResidenceAddress}}></h4>
           <button class="btn btn-primary mt-3" type="button">Редактировать</button>
         </div>
       </div>
+        </form>
     </div>
   </div>
 </div>
