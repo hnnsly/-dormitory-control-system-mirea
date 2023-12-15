@@ -23,6 +23,6 @@ func main() {
 	//storage.Store.Db.Exec("INSERT INTO residences VALUES ($1, $2, $3, $4, $5,$6)", "4", "2", "3", "1", "9", "0")
 	//storage.Store.Db.Exec("INSERT INTO residences VALUES ($1, $2, $3, $4, $5,$6)", "5", "2", "3", "1", "10", "0")
 
-	server := api.APIServer{Addr: ":8000"}
+	server := api.APIServer{Addr: ":8001"}
 	server.Run()
 }
