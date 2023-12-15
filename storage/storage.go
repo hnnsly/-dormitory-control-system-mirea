@@ -1,34 +1,40 @@
-package database
+package storage
 
 import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	_ "hackaton/pkg/models"
 )
 
-var DB *sql.DB
+var Store PStorage
 
-func Connect() {
-	connectionString := "host=localhost port=5432 user=postgres password=testtest dbname=dormitory sslmode=disable"
+func ConnectStorage() {
+
+	Store.createStorage()
+	Store.initTables()
+
+}
+
+func (store *PStorage) createStorage() {
+	connectionString := "host=localhost port=5432 user=postgres password=7595 dbname=dormitory sslmode=disable"
 	db, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
 		panic("could not connect to the database")
 	}
 
-	DB = db
+	store.Db = db
 
-	err = DB.Ping()
+	err = db.Ping()
 	if err != nil {
 		panic(fmt.Sprintf("could not ping the database: %v", err))
 	}
 
-	createTables()
+	store.initTables()
 }
 
-func createTables() {
-	_, err := DB.Exec(`
+func (store *PStorage) initTables() {
+	_, err := store.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
 			username VARCHAR(255) NOT NULL,
@@ -38,8 +44,8 @@ func createTables() {
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'users' table: %v", err))
 	}
-
-	_, err = DB.Exec(`
+	//
+	_, err = store.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
 		    id SERIAL PRIMARY KEY,
 			card_number VARCHAR(255),
@@ -67,4 +73,8 @@ func createTables() {
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'students' table: %v", err))
 	}
+}
+
+type PStorage struct { // PStorage - PostgreSQL Store
+	Db *sql.DB
 }

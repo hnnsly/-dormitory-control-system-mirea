@@ -1,42 +1,41 @@
-package helping
+package utils
 
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"hackaton/internal/keys"
-	"hackaton/pkg/database"
-	"hackaton/pkg/loggers"
-	"hackaton/pkg/models"
+	"hackaton/log"
+	"hackaton/storage"
+	"hackaton/types"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-func CheckJWTAuth(c *gin.Context) (*models.User, error) {
+func CheckJWTAuth(c *gin.Context) (*types.User, error) {
 	cookie, err := c.Request.Cookie("jwt")
 	if err != nil {
 		return nil, err
 	}
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(keys.SecretKey), nil
+		return []byte(SecretKey), nil
 	})
 
 	if err != nil {
 		return nil, err
 	}
 	claims := token.Claims.(*jwt.StandardClaims)
-	var user models.User
+	var user types.User
 
-	err = database.DB.QueryRow("SELECT id, username, password FROM users WHERE id = $1", claims.Issuer).
+	err = storage.Store.Db.QueryRow("SELECT id, username, password FROM users WHERE id = $1", claims.Issuer).
 		Scan(&user.Id, &user.Name, &user.Email)
 
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		return nil, err
 	}
 	newToken, err := GenerateToken(strconv.Itoa(int(user.Id)))
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 
 		return nil, err
 	}
@@ -60,7 +59,7 @@ func GenerateToken(issuer string) (string, error) {
 		ExpiresAt: time.Now().Add(time.Hour * 730).Unix(), //1 day
 	})
 
-	token, err := claims.SignedString([]byte(keys.SecretKey))
+	token, err := claims.SignedString([]byte(SecretKey))
 	if err != nil {
 		return "", err
 	}

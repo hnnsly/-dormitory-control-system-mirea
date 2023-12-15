@@ -1,35 +1,21 @@
-package studentList
+package students
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"hackaton/internal/controllers/databaseModels"
-	"hackaton/internal/helping"
-	"hackaton/pkg/loggers"
+	"hackaton/log"
+	"hackaton/storage"
+	"hackaton/utils"
 	"net/http"
 	"net/url"
 	"strconv"
 )
 
-func FindPage(c *gin.Context) {
-	_, err := helping.CheckJWTAuth(c)
-	if err != nil {
-		loggers.ErrorLogger.Println(err)
-		c.Redirect(302, "/login")
-		return
-
-	}
-
-	c.HTML(200, "students.page.tmpl.html", gin.H{
-		"title":  "Login",
-		"number": 0,
-	})
-}
 func ListStudents(c *gin.Context) {
 	fmt.Println(c.Request.URL, "akgjkad")
-	_, err := helping.CheckJWTAuth(c)
+	_, err := utils.CheckJWTAuth(c)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 		c.Redirect(302, "/login")
 		return
 
@@ -37,11 +23,11 @@ func ListStudents(c *gin.Context) {
 	encodedQuery := c.Request.URL.RawQuery
 	decodedQuery, err := url.QueryUnescape(encodedQuery)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 	}
 	queryParams, err := url.ParseQuery(decodedQuery)
 	if err != nil {
-		loggers.ErrorLogger.Println(err)
+		log.ErrorLogger.Println(err)
 	}
 	filters := make(map[string]string)
 	for key, values := range queryParams {
@@ -60,29 +46,29 @@ func ListStudents(c *gin.Context) {
 	if page == 0 {
 		page = 1
 	}
-	var templateData [][]databaseModels.Student
+	var templateData [][]storage.Student
 	fmt.Println((page - 1) * 12)
 	if filters["name"] != "" {
-		tempData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("full_name", filters["name"], (page-1)*12)
+		tempData, err := storage.Store.ShowStudentsByCriteria("full_name", filters["name"], (page-1)*12)
 		if err != nil {
-			loggers.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
 		templateData = append(templateData, tempData...)
 	} else if filters["number"] != "" {
-		tempData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("card_number", filters["number"], (page-1)*12)
+		tempData, err := storage.Store.ShowStudentsByCriteria("card_number", filters["number"], (page-1)*12)
 		if err != nil {
-			loggers.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
 		templateData = append(templateData, tempData...)
 	}
 	if filters["housing"] != "0" {
-		tempData, err := databaseModels.StudentsDB.ShowStudentsByCriteria("residence_address", filters["housing"], (page-1)*12)
+		tempData, err := storage.Store.ShowStudentsByCriteria("residence_address", filters["housing"], (page-1)*12)
 		if err != nil {
-			loggers.ErrorLogger.Println(err)
+			log.ErrorLogger.Println(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
