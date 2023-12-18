@@ -2,9 +2,6 @@ package login
 
 import (
 	"database/sql"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 	"hackaton/log"
 	"hackaton/storage"
 	"hackaton/types"
@@ -12,6 +9,10 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c *gin.Context) {

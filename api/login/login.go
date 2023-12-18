@@ -9,4 +9,5 @@ func Start(c *gin.Context) {
 }
 func Redirect(c *gin.Context) {
 	c.Redirect(301, "/students/find")
+
 }

@@ -18,7 +18,7 @@ func ShowStudentCard(c *gin.Context) {
 		return
 	}
 	fmt.Println(c.Query("id"))
-	stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
+	stud, err := storage.Store.ShowStudentsByCriteria("id", "", c.Query("id"), "", 0)
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.Status(http.StatusInternalServerError)
@@ -42,7 +42,7 @@ func EditStudentPage(c *gin.Context) {
 		return
 
 	}
-	stud, err := storage.Store.ShowStudentsByCriteria("id", c.Query("id"), 0)
+	stud, err := storage.Store.ShowStudentsByCriteria("id", "", c.Query("id"), "", 0)
 	if err != nil {
 		log.ErrorLogger.Println(err)
 		c.Status(http.StatusInternalServerError)
@@ -91,7 +91,7 @@ func EditStudentAPI(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "invalid request"})
 		return
 	}
-	stud, _ := storage.Store.ShowStudentsByCriteria("id", strconv.Itoa(id), 0)
+	stud, _ := storage.Store.ShowStudentsByCriteria("id", "", strconv.Itoa(id), "", 0)
 	if len(stud) == 0 {
 		c.Redirect(302, "/students/find")
 		return
@@ -105,7 +105,9 @@ func EditStudentAPI(c *gin.Context) {
 		EnrollmentDate:        filter["enrollment_date"],
 		EnrollmentOrderNumber: filter["enrollment_order_number"],
 		BirthPlace:            filter["birth_place"],
-		PhotoUrl:              stud[0][0].PhotoUrl}
+		PhotoUrl:              stud[0][0].PhotoUrl,
+		ResidenceAddress:      stud[0][0].ResidenceAddress,
+		ResidenceID:           stud[0][0].ResidenceID}
 	err = storage.Store.Rewrite(*student)
 	if err != nil {
 		log.ErrorLogger.Println(err)
@@ -146,7 +148,7 @@ func AddStudentAPI(c *gin.Context) {
 		c.Status(500)
 		return
 	}
-	stud, _ := storage.Store.ShowStudentsByCriteria("id", strconv.Itoa(id), 0)
+	stud, _ := storage.Store.ShowStudentsByCriteria("id", "", strconv.Itoa(id), "", 0)
 	adr := stud[0][0].ResidenceAddress
 	c.JSON(200, gin.H{
 		"address": adr,

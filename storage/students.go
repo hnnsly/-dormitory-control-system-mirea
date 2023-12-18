@@ -8,21 +8,49 @@ import (
 
 // ShowStudentsByCriteria получает на вход название столбца и нужное для отбора значение,
 // возвращает []string с ФИО всех студентов, подходящих под критерии
-func (st *PStorage) ShowStudentsByCriteria(column, value string, offset int) ([][]Student, error) {
+func (st *PStorage) ShowStudentsByCriteria(column, column2, value, value2 string, offset int) ([][]Student, error) {
 	fmt.Println(offset)
 	var query string
-	if column == "residence_address" {
-		query = fmt.Sprintf("SELECT * FROM students WHERE %s LIKE $1 OFFSET $2 LIMIT 12", column)
-		value = "%" + value + "%"
+	var err error
+	var rows *sql.Rows
+	if column2 != "" {
+		if column == "residence_address" || column == "full_name" {
+			query = fmt.Sprintf("SELECT * FROM students WHERE %s LIKE $1 AND %s LIKE $2 OFFSET $3 LIMIT 12", column, column2)
+			value = "%" + value + "%"
+			value2 = "%" + value2 + "%"
+			rows, err = st.Db.Query(query, value, value2, offset)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				return nil, fmt.Errorf("Ошибка выполнения запроса")
+			}
+		} else {
+			query = fmt.Sprintf("SELECT * FROM students WHERE %s = $1 AND %s LIKE $2 OFFSET $3 LIMIT 12", column, column2)
+			value2 = "%" + value2 + "%"
+			rows, err = st.Db.Query(query, value, value2, offset)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				return nil, fmt.Errorf("Ошибка выполнения запроса")
+			}
+		}
 	} else {
-		query = fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
+		if column == "residence_address" || column == "full_name" {
+			query = fmt.Sprintf("SELECT * FROM students WHERE %s LIKE $1 OFFSET $2 LIMIT 12", column)
+			value = "%" + value + "%"
+			rows, err = st.Db.Query(query, value, offset)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				return nil, fmt.Errorf("Ошибка выполнения запроса")
+			}
+		} else {
+			query = fmt.Sprintf("SELECT * FROM students WHERE %s = $1 OFFSET $2 LIMIT 12", column)
+			rows, err = st.Db.Query(query, value, offset)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				return nil, fmt.Errorf("Ошибка выполнения запроса")
+			}
+		}
 	}
 
-	rows, err := st.Db.Query(query, value, offset)
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		return nil, fmt.Errorf("Ошибка выполнения запроса")
-	}
 	defer rows.Close()
 
 	students := make([][]Student, 0, 4)
@@ -136,32 +164,32 @@ func (st *PStorage) Rewrite(student Student) error {
 		UPDATE students
 		SET
 			full_name = $2,
-			birth_date = $3,
-			photo_url = $4,
-			housing_order_number = $5,
-			enrollment_order_number = $6,
-			enrollment_date = $7,
-			birth_place = $8,
-			residence_address = $9,
-			residence_id = $10
+			card_number = $3,
+			birth_date = $4,
+			photo_url = $5,
+			housing_order_number = $6,
+			enrollment_order_number = $7,
+			enrollment_date = $8,
+			birth_place = $9,
+			residence_address = $10,
+			residence_id = $11
 		WHERE
 			id = $1
 	`
 
-	newAddr, addrID, err := st.Settle(student.ID)
-
-	_, err = st.Db.Exec(
+	_, err := st.Db.Exec(
 		query,
 		student.ID,
 		student.FullName,
+		student.CardNumber,
 		student.BirthDate,
 		student.PhotoUrl,
 		student.HousingOrderNumber,
 		student.EnrollmentOrderNumber,
 		student.EnrollmentDate,
 		student.BirthPlace,
-		newAddr,
-		addrID,
+		student.ResidenceAddress,
+		student.ResidenceID,
 	)
 
 	return err
