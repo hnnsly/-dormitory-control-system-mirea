@@ -1,9 +1,10 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	login2 "hackaton/api/login"
 	"hackaton/api/students"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (s *APIServer) Run() {
@@ -19,6 +20,7 @@ func (s *APIServer) Run() {
 	app.GET("/students/show", students.ShowStudentCard)
 	app.GET("/students/add", students.AddStudentPage)
 	app.GET("/students/edit", students.EditStudentPage) //TODO: из-за такого при первом заходе на поиск будет нихуя, а после поиска обновление страницы
+	app.POST("/api/register", login2.Register)
 	app.POST("/api/login", login2.Login)
 	app.GET("/api/user", login2.User)
 	app.POST("/api/addstudent", students.AddStudentAPI)
