@@ -10,6 +10,7 @@
 <body>
 <header th:insert="header :: header"></header>
 <div class="container">
+    <div class="text-center"><image src="https://www.mirea.ru/upload/medialibrary/c1a/MIREA_Gerb_Colour.jpg" style="max-height: 200px; max-width: 200px"></div>
     <div class="text-center">
         <h1>Авторизация</h1>
     </div>
@@ -21,10 +22,10 @@
             <p><input type="username" name="username" placeholder="example@mirea.ru" class="form-control"></p>
             <label class="form-label" >Пароль</label>
             <p><input type="password" name="password" placeholder="Пароль" class="form-control"></p>
-            <label for="login">Login</label>
-            <input type="radio" id="login" name="action" value="login" checked>
-            <label for="register">Register</label>
-            <input type="radio" id="register" name="action" value="register">
+{{/*            <label for="login">Login</label>*/}}
+{{/*            <input type="radio" id="login" name="action" value="login" checked>*/}}
+{{/*            <label for="register">Register</label>*/}}
+{{/*            <input type="radio" id="register" name="action" value="register">*/}}
             <p><button type="submit" class="btn btn-primary">Войти</button></p>
         </form>
     </div>

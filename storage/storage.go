@@ -135,9 +135,11 @@ func (store *PStorage) InitStudents() error {
 		"Петров Петр Петрович", "Иванов Иван Иванович", "Морозов Мороз Морозович",
 		"Кузнецов Кузнец Кузнецович", "Сидоров Сидор Сидорович", "Новиков Новик Новикович",
 		"Соколов Сокол Соколович", "Лебедев Лебедь Лебедевич", "Козлов Козел Козлович"}
-	photos := []string{"https://thumb.tildacdn.com/tild6439-3438-4437-b065-303734623661/-/resize/880x/-/format/webp/_1_5.png", "https://www.ixbt.com/img/n1/news/2023/3/3/ixbtmedia_a_student_cheats_on_an_exam_and_is_worried_not_to_be__94f1ef9f-e6fd-4f63-85d9-90c6a351c619_large.png", "https://graziamagazine.ru/upload/attach/e6b/e6b512b4232be912a087f9166040e6ec.jpg", "https://mcmag.ru/wp-content/uploads/2022/12/stil-v-filme-amerikanskij-psihopat-02-mcmag.ru_.png"}
+	photos := []string{"https://cdn-irec.r-99.com/sites/default/files/imagecache/250i/pictures/24/picture-2487454-Tzbu4+Uy.jpg", "https://thumb.tildacdn.com/tild6439-3438-4437-b065-303734623661/-/resize/880x/-/format/webp/_1_5.png", "https://www.ixbt.com/img/n1/news/2023/3/3/ixbtmedia_a_student_cheats_on_an_exam_and_is_worried_not_to_be__94f1ef9f-e6fd-4f63-85d9-90c6a351c619_large.png", "https://graziamagazine.ru/upload/attach/e6b/e6b512b4232be912a087f9166040e6ec.jpg",
+		"https://icdn.lenta.ru/images/2023/07/19/19/20230719194728896/square_320_2585a2b124b2826b23136317f1e612a8.jpg", "https://sun9-60.userapi.com/impg/EqZCpHcVkFFB6JQTsESZ7LzI_qMBt6TlGEE0QQ/HVg959RWLR4.jpg?size=700x1000&quality=96&sign=93ea47eb047e3a84f066c4ef0bf54154&type=album",
+		"https://sun1-96.userapi.com/impg/oRTKoLxmw6M_eCXcwVVL_d3QJEoxpwSlQhxt2Q/6-4B5jSpIkw.jpg?size=1200x1600&quality=96&sign=a86eed1d4a998ec1112d63596a0b21f2&type=album"}
 	birthDates := func() string { return fmt.Sprintf("%v.%v.200%v", rand.Intn(30), rand.Intn(13), rand.Intn(10)) }
-	photoURLs := func() string { return photos[rand.Intn(4)] }
+	photoURLs := func() string { return photos[rand.Intn(len(photos))] }
 	housingOrderNumbers := func() string { return fmt.Sprintf("%v-%v%v", rand.Intn(100), rand.Intn(100), rand.Intn(60)) }
 	enrollmentOrderNumbers := func() string { return fmt.Sprintf("%v-%v%v", rand.Intn(100), rand.Intn(100), rand.Intn(60)) }
 	enrollmentDates := func() string { return fmt.Sprintf("%v.%v.20%v", rand.Intn(30), rand.Intn(13), rand.Intn(6)+16) }
@@ -171,8 +173,8 @@ func (store *PStorage) InitResidences() error {
 	addresses := []string{"Ул. Пушкина, д. 21", "Ул. Вернадского, д.86к4", "Ул. Асанова, д.14к8"}
 	c := 0
 	for _, address := range addresses {
-		for floor := 1; floor <= rand.Intn(3)+4; floor++ {
-			for room := 1; room <= rand.Intn(120)+20; room++ {
+		for floor := 1; floor <= 2; floor++ {
+			for room := 1; room <= 9; room++ {
 				lim := 0
 				if room%2 == 0 {
 					lim = 3

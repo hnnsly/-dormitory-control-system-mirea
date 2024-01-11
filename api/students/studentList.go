@@ -49,30 +49,52 @@ func ListStudents(c *gin.Context) {
 	var templateData [][]storage.Student
 	fmt.Println((page - 1) * 12)
 	if filters["name"] != "" {
-		tempData, err := storage.Store.ShowStudentsByCriteria("full_name", filters["name"], (page-1)*12)
-		if err != nil {
-			log.ErrorLogger.Println(err)
-			c.Status(http.StatusInternalServerError)
-			return
+		if filters["housing"] != "0" {
+			tempData, err := storage.Store.ShowStudentsByCriteria("full_name", "residence_address", filters["name"], filters["housing"], (page-1)*12)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				c.Status(http.StatusInternalServerError)
+				return
+			}
+			templateData = append(templateData, tempData...)
+		} else {
+			tempData, err := storage.Store.ShowStudentsByCriteria("full_name", "", filters["name"], "", (page-1)*12)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				c.Status(http.StatusInternalServerError)
+				return
+			}
+			templateData = append(templateData, tempData...)
 		}
-		templateData = append(templateData, tempData...)
 	} else if filters["number"] != "" {
-		tempData, err := storage.Store.ShowStudentsByCriteria("card_number", filters["number"], (page-1)*12)
-		if err != nil {
-			log.ErrorLogger.Println(err)
-			c.Status(http.StatusInternalServerError)
-			return
+		if filters["housing"] != "0" {
+			tempData, err := storage.Store.ShowStudentsByCriteria("card_number", "residence_address", filters["number"], filters["housing"], (page-1)*12)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				c.Status(http.StatusInternalServerError)
+				return
+			}
+			templateData = append(templateData, tempData...)
+		} else {
+			tempData, err := storage.Store.ShowStudentsByCriteria("card_number", "", filters["number"], "", (page-1)*12)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				c.Status(http.StatusInternalServerError)
+				return
+			}
+			templateData = append(templateData, tempData...)
 		}
-		templateData = append(templateData, tempData...)
-	}
-	if filters["housing"] != "0" {
-		tempData, err := storage.Store.ShowStudentsByCriteria("residence_address", filters["housing"], (page-1)*12)
-		if err != nil {
-			log.ErrorLogger.Println(err)
-			c.Status(http.StatusInternalServerError)
-			return
+	} else {
+		if filters["housing"] != "0" {
+			tempData, err := storage.Store.ShowStudentsByCriteria("residence_address", "", filters["housing"], "", (page-1)*12)
+			if err != nil {
+				log.ErrorLogger.Println(err)
+				c.Status(http.StatusInternalServerError)
+				return
+			}
+			templateData = append(templateData, tempData...)
 		}
-		templateData = append(templateData, tempData...)
+
 	}
 	u := url.URL{}
 	q := u.Query()
@@ -90,7 +112,7 @@ func ListStudents(c *gin.Context) {
 	if page < 3 {
 		page = 3
 	}
-	data := gin.H{
+	c.HTML(200, "students.page.tmpl.html", gin.H{
 		"title":    "Login",
 		"Students": templateData,
 		"Name":     filters["name"],
@@ -103,12 +125,5 @@ func ListStudents(c *gin.Context) {
 		"PageNext": pageNext,
 		"PagePrev": pagePrev,
 		"Query":    queryString,
-	}
-	err = utils.TemplateCache["students.page.tmpl.html"].Execute(c.Writer, data)
-	if err != nil {
-		log.ErrorLogger.Println(err)
-		c.Status(http.StatusInternalServerError)
-		return
-	}
-	//c.HTML(200, "students.page.tmpl.html", data)
+	})
 }
